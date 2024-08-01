@@ -1,25 +1,5 @@
-{% load static %}
-<head>
-    <link rel="stylesheet" href="{% static 'css/posts.css' %}">
-    <script src="{% static 'js/memo.js' %}" defer></script>
-</head>
-<h1>AjaxApp</h1>
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.content }}
-  <button type="submit">投稿する</button>
-</form>
-
-<div class="posts-container"></div>
-
-{% for post in posts %}
-  <div class="post">
-    <div class="post-date">
-      投稿日時：{{ post.created_at }}
-    </div>
-    <div class="post-content">
-      {{ post.content }}
-    </div>
+<h1>備品管理システムへようこそ</h1>
+  <div >
+    ログインまたは登録して備品を管理しましょう。
   </div>
-{% endfor %}

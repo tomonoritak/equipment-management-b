@@ -1,4 +1,3 @@
+from django.shortcuts import render
 
-class IndexView():
-    template_name = 'posts/index.html'
-
+# Create your views here.

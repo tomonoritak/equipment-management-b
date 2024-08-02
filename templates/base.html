@@ -1,0 +1,43 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>備品管理システム</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #34495e;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        .header a {
+            color: white;
+            margin-left: 20px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+  <div class="header">
+    <a href="#">ホーム</a>
+    <div style="float: right;">
+        <a href="#">ログイン</a>
+        <a href="#">登録</a>
+        <!-- ユーザのログイン状態と権限によって表示を変えるコードを後ほど記載する -->
+    </div>
+  </div>
+
+  {% block content %}{% endblock content %}  
+
+</body>
+</html>

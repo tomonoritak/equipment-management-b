@@ -1,8 +1,7 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
     <title>備品管理システム</title>
     <style>
         body {
@@ -11,17 +10,7 @@
             margin: 0;
             padding: 0;
         }
-        .header {
-            background-color: #34495e;
-            color: white;
-            padding: 10px;
-            text-align: left;
-        }
-        .header a {
-            color: white;
-            margin-left: 20px;
-            text-decoration: none;
-        }
+        
         .container {
             display: flex;
             justify-content: center;
@@ -97,15 +86,7 @@
             text-decoration: underline;
         }
     </style>
-</head>
 <body>
-    <div class="header">
-        <a href="#">ホーム</a>
-        <div style="float: right;">
-            <a href="#">ログイン</a>
-            <a href="#">登録</a>
-        </div>
-    </div>
     <div class="container">
         <div class="box">
             <h1>ログイン</h1>
@@ -126,3 +107,4 @@
 </body>
 </html>
 
+{% endblock content %}

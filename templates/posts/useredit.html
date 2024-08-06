@@ -1,67 +1,97 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
     <title>ユーザー情報の編集</title>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
+
         .container {
-            width: 50%;
-            margin: auto;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            padding-top: 15px; 
         }
+
+        .box {
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            border-radius: 10px;
+        }
+
+        .box h1 {
+            text-align: center;
+            font-weight: normal;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
         .form-group {
             margin-bottom: 15px;
+            display: flex;
+            justify-content: center; /* 中央寄せ */
+            align-items: center;
+            margin-bottom: 15px;
+            flex-direction: column;
         }
+
+        .form-group small {
+            color: #666;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
         }
+
         .form-group input[type="text"],
         .form-group input[type="email"] {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 60%;
         }
         .form-group input[type="checkbox"] {
             margin-right: 5px;
         }
-        .form-group input[type="submit"] {
+        
+        .form-group button {
+            display: block;
+            width: auto;
             padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 20px auto 0 auto;
         }
-        nav {
-            background-color: #2c3e50;
-            padding: 10px 0;
+        .form-group button:hover {
+            background-color: #0056b3;
         }
-        nav a {
-            color: #ecf0f1;
-            margin: 0 15px;
-            text-decoration: none;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
+
+        
+        
     </style>
-</head>
+
 <body>
-
-<nav>
-    <a href="#">備品一覧</a>
-    <a href="#">発注履歴</a>
-    <div style="float: right;">
-        <a href="#">ユーザー一覧</a>
-        <a href="#">ログアウト</a>
-    </div>
-</nav>
-
 <div class="container">
+    <div class=box>
     <h1>ユーザー情報の編集</h1>
     <form>
         <div class="form-group">
             <label for="username">ユーザー名:</label>
             <input type="text" id="username" name="username" value="tetetegbfadfa" required>
+            <small>この項目は必須です。半角アルファベット、半角数字、@/./+/-/_ で150文字以内にしてください。</small>
         </div>
         <div class="form-group">
             <label for="email">メールアドレス:</label>
@@ -78,10 +108,13 @@
             </label>
         </div>
         <div class="form-group">
-            <input type="submit" value="保存">
+            <button type="submit">保存</button>
         </div>
     </form>
+</div>
 </div>
 
 </body>
 </html>
+
+{% endblock content %}

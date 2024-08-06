@@ -1,90 +1,82 @@
 <!--備品詳細-->
-<!DOCTYPE html>
-<html lang="ja">
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        width: 50%;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .form-group button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+    }
+    .form-group button:hover {
+        background-color: #0056b3;
+    }
+    .history,
+    .approval {
+        margin-top: 20px;
+    }
+    .history-item,
+    .approval-item {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+    .history-item:last-child,
+    .approval-item:last-child {
+        border-bottom: none;
+    }
+</style>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>商品詳細</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 50%;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input[type="text"],
-        .form-group input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .form-group button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 16px;
-        }
-        .form-group button:hover {
-            background-color: #0056b3;
-        }
-        .history,
-        .approval {
-            margin-top: 20px;
-        }
-        .history-item,
-        .approval-item {
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-        .history-item:last-child,
-        .approval-item:last-child {
-            border-bottom: none;
-        }
-    </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#">商品一覧</a></li>
-                <li><a href="#">発注履歴</a></li>
-                <li style="float: right;"><a href="#">ユーザー一覧</a></li>
-                <li style="float: right;"><a href="#">ログアウト</a></li>
-            </ul>
-        </nav>
-    </header>
     <div class="container">
-        <h2>ボールペン</h2>
-        <button>編集</button>
-        <img src="path/to/image" alt="ボールペン" style="display: block; margin: 20px auto;">
-        <p>特徴: 黒色。無色。</p>
-        <p>カテゴリ: 文房具</p>
-        <p>状態: 使用可能</p>
-        <p>設置場所: B2 倉庫</p>
-        <p>在庫数: 10000</p>
+        <h2>ボールペン<!-- {{itemregistration.name}} --></h2>
+        <a href="#" class="btn">編集</a>
+        <img src="path/to/image" alt="{{itemregistration.name}}" style="display: block; margin: 20px auto;">
+        <p>説明: 黒色。無色。<!-- {{itemregistration.description}} --></p>
+        <p>カテゴリ: 文房具<!-- {{itemregistration.category}} --></p>
+        <p>状態: 使用可能<!-- {{itemregistration.status}} --></p>
+        <p>設置場所: B2 倉庫<!-- {{itemregistration.location}} --></p>
+        <p>在庫数: 10000<!-- {{itemregistration.quantity}} --></p>
         
         <h3>在庫数を変更</h3>
         <div class="form-group">
@@ -117,4 +109,5 @@
         </div>
     </div>
 </body>
-</html>
+
+{% endblock content %}

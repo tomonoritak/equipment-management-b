@@ -7,9 +7,9 @@ urlpatterns = [
     path('posts/itemdetails/', itemdetailsView.as_view(), name='itemdetails'),
     path('posts/itemedit/', itemeditView.as_view(), name='itemedit'),
     path('posts/itemlist/', itemlistView.as_view(), name='itemlist'),
-    path('posts/itemregistration', itemregistrationView.as_view(), name='itemregistration'),
+    path('posts/itemregistration/', itemregistrationView.as_view(), name='itemregistration'),
 
-    path('users/login', loginView.as_view(), name='login'),
+    path('users/login/', loginView.as_view(), name='login'),
     path('users/useredit/', usereditView.as_view(), name='useredit'),
     path('users/userlist/', usereditView.as_view(), name='userlist'),
     path('users/userregistration/', userregistrationView.as_view(), name='userregistration'),

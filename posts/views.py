@@ -35,7 +35,7 @@ class loginView(ListView):
     context_object_name = 'login'
 class usereditView(ListView):
     model = Posts
-    template_name = 'posts/usereditView.html'
+    template_name = 'posts/useredit.html'
     context_object_name = 'usereditView'
 class userlistView(ListView):
     model = Posts

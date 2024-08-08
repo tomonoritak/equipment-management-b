@@ -13,29 +13,56 @@
             margin: 0;
             padding: 0;
         }
-        .header {
+        .nav {
             background-color: #34495e;
             color: white;
             padding: 10px;
             text-align: left;
+            display: flex;
+            justify-content: space-between;
         }
-        .header a {
+        .nav a {
             color: white;
             margin-left: 20px;
             text-decoration: none;
+        }
+        .nav-left {
+            display: flex;
+        }
+        .nav-right {
+            display: flex;
         }
     </style>
 </head>
 
 <body>
-  <div class="header">
-    <a href="{% url 'Posts:index' %}">ホーム</a>
-    <div style="float: right;">
-        <a href="{% url 'Posts:login' %}">ログイン</a>
-        <a href="{% url 'Posts:userregistration' %}">登録</a>
-        <!-- ユーザのログイン状態と権限によって表示を変えるコードを後ほど記載する -->
-    </div>
-  </div>
+    <nav>
+        {% if user.is_superuser %}
+        <div class="nav-left">
+            <a href="{% url 'Posts:itemlist' %}">備品一覧</a>
+            <a href="#">発注履歴</a>
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'Posts:userlist' %}">ユーザー一覧</a>
+            <a href="{% url '/' %}">ログアウト</a>
+        </div>
+        {% elif user.is_staff %}
+        <div class="nav-left">
+            <a href="{% url 'Posts:itemlist' %}">備品一覧</a>
+            <a href="#">発注履歴</a>
+        </div>
+        <div class="nav-right">
+            <a href="{% url '/' %}">ログアウト</a>
+        </div>
+        {% else %}
+        <div class="nav-left">
+            <a href="{% url '/' %}">ホーム</a>
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'Posts:login' %}">ログイン</a>
+            <a href="{% url 'Posts:userregistration' %}">登録</a>
+        </div>
+        {% endif %}
 
   {% block content %}{% endblock content %}  
 

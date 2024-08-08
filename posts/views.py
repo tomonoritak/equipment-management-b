@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from django.views.generic import ListView,CreateView,DetailView,UpdateView
+from django.views.generic import ListView,CreateView,DetailView
 from django.urls import reverse_lazy
+from django.views.generic import ListView
 from .models import Posts
 from .forms import PostForm
-from django.urls import reverse
 
 class IndexView(ListView):
     model = Posts
@@ -15,10 +15,11 @@ class itemlistView(ListView):
     template_name = 'posts/itemlist.html'
     context_object_name = 'itemlist'
 
-class orderhistoryView(ListView):
-    model = Posts
-    template_name = 'posts/orderhistory.html'
-    context_object_name = 'orderhistory'
+
+#class itemeditView(ListView):
+#    model = Posts
+#    template_name = 'posts/itemedit.html'
+#    context_object_name = 'itemedit'
 
 
 class itemCreateView(CreateView):
@@ -36,15 +37,22 @@ class itemDetailView(DetailView):
     template_name = 'posts/itemdetail.html'
     context_object_name = 'post'
 
-class itemeditView(UpdateView):
-    model = Posts
-    form_class = PostForm
-    template_name = 'posts/itemedit.html'
 
-    def form_valid(self, form):
-        post = form.save(commit=False)
-        post.save()
-        return super().form_valid(form)
+#class loginView(ListView):
+#    model = Posts
+#    template_name = 'posts/login.html'
+#    context_object_name = 'login'
+#class usereditView(ListView):
+#    model = Posts
+#    template_name = 'posts/useredit.html'
+#    context_object_name = 'usereditView'
+#class userlistView(ListView):
+#    model = Posts
+#    template_name = 'posts/userlist.html'
+#    context_object_name = 'userlist'
+#class userregistrationView(ListView):
+#    model = Posts
+#    template_name = 'posts/userregistration.html'
+#    context_object_name = 'userregistration'
 
-    def get_success_url(self):
-        return reverse('Posts:itemdetail', kwargs={'pk': self.object.pk})
+

@@ -59,7 +59,8 @@
 
 <div class="container">
     <h1>備品を追加</h1>
-    <form>
+    <form method="post" enctype="multipart/form-data" action="#">
+        {% csrf_token %}
         <div class="form-group">
             <label for="name">名前:</label>
             <input type="text" id="name" name="name">
@@ -70,7 +71,7 @@
         </div>
         <div class="form-group">
             <label for="status">状態:</label>
-            <input type="text" id="status" name="status">
+            <input type="text" id="status" name="status" value="未承認">
         </div>
         <div class="form-group">
             <label for="location">設置場所:</label>
@@ -85,8 +86,8 @@
             <input type="file" id="image" name="image">
         </div>
         <div class="form-group">
-            <label for="quantity">在庫数:</label>
-            <input type="number" id="quantity" name="quantity" value="1">
+            <label for="stock_quantity">発注数:</label>
+            <input type="number" id="stock_quantity" name="stock_quantity" value="1">
         </div>
         <div class="form-group">
             <input type="submit" value="追加">

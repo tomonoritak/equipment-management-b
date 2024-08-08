@@ -1,5 +1,3 @@
-<!--備品詳細-->
-
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
@@ -71,7 +69,7 @@
     .approval-item:last-child {
         border-bottom: none;
     }
-    .btn{
+    .btn {
         padding: 10px;
         background-color: #007bff;
         border: none;
@@ -84,47 +82,34 @@
     }
 </style>
 
-<head>
-    <title>商品詳細</title>
-</head>
-<body>
-    <div class="container">
-        <h1>ボールペン<!-- {{itemregistration.name}} --></h1>
-        <a href="#" class="btn">編集</a><!--備品編集画面へリンク繋げる-->
-        <img src="path/to/image" alt="{{itemregistration.name}}" style="display: block; margin: 20px auto;">
-        <p>説明: 黒色。無色。<!-- {{itemregistration.description}} --></p>
-        <p>カテゴリ: 文房具<!-- {{itemregistration.category}} --></p>
-        <p>状態: 使用可能<!-- {{itemregistration.status}} --></p>
-        <p>設置場所: B2 倉庫<!-- {{itemregistration.location}} --></p>
-        <p>在庫数: 10000<!-- {{itemregistration.quantity}} --></p>
-        
-        <h2>在庫数を変更</h2>
-        <div class="form-group">
-            <div><label for="stock">在庫数:</label></div>
-            <div><input type="number" id="stock" name="stock" value="10000"></div>
-            <div><button type="submit">保存</button></div>
-        </div>
+<div class="container">
+    <h1>{{ post.name }}</h1>
+    <a href="#" class="btn">編集</a>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.name }}" style="display: block; margin: 20px auto;">
+    {% endif %}
+    <p>説明: {{ post.description }}</p>
+    <p>カテゴリ: {{ post.category }}</p>
+    <p>状態: {{ post.status }}</p>
+    <p>設置場所: {{ post.location }}</p>
+    <p>在庫数: {{ post.stock_quantity }}</p>
+    
+    <h2>在庫数を変更</h2>
 
-        <div class="history">
-            <h2>在庫数の変更履歴</h2> <!--入力内容をJavaScriptで反映するようにする-->
-            <div class="history-item">2024年8月1日15:54 - しべ: 10000 に変更</div>
-            <div class="history-item">2024年8月1日10:59 - sahochan09: 13 に変更</div>
-        </div>
 
-        <h2>発注依頼</h2>
-        <div class="form-group">
-            <div><label for="order">発注数:</label></div>
-            <div><input type="number" id="order" name="order"></div>
-            <div><button type="submit">発注依頼</button></div>
-        </div>
+    <div class="history">
+        <h2>在庫数の変更履歴</h2>
 
-        <div class="approval">
-            <h2>発注依頼の承認</h2> <!--入力内容をJavaScriptで反映するようにする-->
-            <div class="approval-item">2024年8月1日10:29 - sahochan09: 5 - 承認済み</div>
-            <div class="approval-item">2024年8月1日9:21 - user_02: 7 - 承認済み</div>
-            <div class="approval-item">2024年7月31日5:30 - admin_101814: 2 - 承認済み</div>
-        </div>
     </div>
-</body>
+
+    <h2>発注依頼</h2>
+
+
+
+    <div class="approval">
+        <h2>発注依頼の承認</h2>
+
+    </div>
+</div>
 
 {% endblock content %}

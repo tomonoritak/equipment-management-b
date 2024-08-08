@@ -1,7 +1,118 @@
-<!--発注履歴-->
+{% extends "base.html" %}
 {% load static %}
-<head>
-  <link rel="stylesheet" href="{% static 'css/posts.css' %}">
-</head>
-<body>
-</body>
+{% block content %}
+
+<style>
+    .container {
+        display: flex;
+        height: calc(100vh - 40px);
+        width: 80%;
+        margin: 10px auto;
+    }
+    .box {
+        background-color: white;
+        padding: 20px;
+        margin: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+    }
+
+    .box h1 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 30px;
+    }
+
+    .additem-button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: #3498db;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        text-align: center;
+        width: 100px;
+    }
+
+    .additem-button:hover {
+        background-color: #2980b9;
+    }
+
+    .itemlist, .item_row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding-right: 30px;
+        font-weight: bold;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 5px;
+    }
+
+    .itemlist div, .item_row div {
+        flex: 1;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .itemlist div:first-child, .item_row div:first-child {
+        flex: 2;
+    }
+
+    .item_row {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .item_row a {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+    .item_row a:hover {
+        text-decoration: underline;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<div class="container">
+    <div class="box">
+        <h1>備品一覧</h1>
+        <a href="{% url 'itemregistration' %}" class="additem-button">備品を追加</a>
+        <div class="itemlist">
+            <div class="item-name">名前</div>
+            <div class="item-category">カテゴリ</div>
+            <div class="item-place">設置場所</div>
+            <div class="item-quantity">在庫数</div>
+            <div class="item-status">ステータス</div>
+        </div>
+        <ul>
+            {% for post in itemlist %}
+                <li>
+                    <div class="item_row">
+                        <div class="item-name">
+                            <a href="{% url 'itemdetail' post.id %}">{{ post.name }}</a>
+                        </div>
+                        <div class="item-category">{{ post.category }}</div>
+                        <div class="item-place">{{ post.location }}</div>
+                        <div class="item-quantity">{{ post.stock_quantity }}</div>
+                        <div class="item-status">{{ post.status }}</div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{% endblock content %}

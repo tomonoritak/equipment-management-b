@@ -1,6 +1,8 @@
 from pathlib import Path
 import os 
 import environ 
+from decouple import config # デプロイ用
+from dj_database_url import parse as dburl # デプロイ用
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -47,7 +49,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,17 +68,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-
+default_dburl = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
 DATABASES = {
-     'default': {
-         'ENGINE': 'django.db.backends.postgresql',
-         'NAME': 'equipment-management-b',
-         'USER': 'postgres',
-        'PASSWORD': '    ', # ご自身で設定したパスワード
-         'HOST': 'localhost',
-         'PORT': '5432',
-     }
- }
+    "default": config("DATABASE_URL", default=default_dburl, cast=dburl),
+}
 
 
 # Password validation
@@ -119,3 +114,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# //本番環境//
+STATIC_ROOT = str(BASE_DIR / "staticfiles")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+

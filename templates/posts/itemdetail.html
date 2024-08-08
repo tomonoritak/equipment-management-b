@@ -84,7 +84,7 @@
 
 <div class="container">
     <h1>{{ post.name }}</h1>
-    <a href="#" class="btn">編集</a>
+    <a href="{% url 'Posts:itemedit' post.pk %}" class="btn">編集</a>
     {% if post.image %}
         <img src="{{ post.image.url }}" alt="{{ post.name }}" style="display: block; margin: 20px auto;">
     {% endif %}
@@ -96,15 +96,12 @@
     
     <h2>在庫数を変更</h2>
 
-
     <div class="history">
         <h2>在庫数の変更履歴</h2>
 
     </div>
 
     <h2>発注依頼</h2>
-
-
 
     <div class="approval">
         <h2>発注依頼の承認</h2>

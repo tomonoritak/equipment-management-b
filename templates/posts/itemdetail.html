@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        width: 80%;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    .container img {
+        display: inline-block;
+    }
+    .container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .container h2 {
+        margin-top: 50px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 300px;
+    }
+    .form-group button {
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+    }
+    .form-group button:hover {
+        background-color: #0056b3;
+    }
+    .history,
+    .approval {
+        margin-top: 20px;
+    }
+    .history-item,
+    .approval-item {
+        padding: 10px;
+    }
+    .history-item:last-child,
+    .approval-item:last-child {
+        border-bottom: none;
+    }
+    .btn {
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+    }
+    a {
+        text-decoration: none;
+    }
+</style>
+
+<div class="container">
+    <h1>{{ post.name }}</h1>
+    <a href="{% url 'Posts:itemedit' post.pk %}" class="btn">編集</a>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.name }}" style="display: block; margin: 20px auto;">
+    {% endif %}
+    <p>説明: {{ post.description }}</p>
+    <p>カテゴリ: {{ post.category }}</p>
+    <p>状態: {{ post.status }}</p>
+    <p>設置場所: {{ post.location }}</p>
+    <p>在庫数: {{ post.stock_quantity }}</p>
+    
+    <h2>在庫数を変更</h2>
+
+    <div class="history">
+        <h2>在庫数の変更履歴</h2>
+
+    </div>
+
+    <h2>発注依頼</h2>
+
+    <div class="approval">
+        <h2>発注依頼の承認</h2>
+
+    </div>
+</div>
+
+{% endblock content %}

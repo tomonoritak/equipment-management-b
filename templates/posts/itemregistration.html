@@ -1,99 +1,128 @@
-<!DOCTYPE html>
-<html lang="ja">
+<!--備品登録画面-->
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        display: flex;
+        height: calc(100vh - 100px);
+        width: 90%;
+        margin: 10px auto;
+        text-align: center;
+    }
+    .box {
+        background-color: white;
+        padding: 20px;
+        margin: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        height: 90%;
+        width: 95%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+    .i-form {
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+    .form-group {
+        margin-right: 15px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-weight: bold;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group input[type="file"]{
+        width: 100%;
+        padding: 8px;
+        margin-left: 10px;
+        box-sizing: border-box;   
+        border: 1px solid rgba(0, 0, 0, 0.2);     
+    }
+    .form-group input[type="file"] {
+        width: 80%;
+    }
+    .form-group input[type="submit"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-size: 16px;
+        margin-top: 15px;
+    }
+    .form-group input[type="text"].wide,
+    .form-group input[type="number"].wide,
+    .form-group textarea.wide,
+    .form-group input[type="file"].wide {
+            width: 90%;
+            max-width: none;
+    }
+</style>
+
 <head>
-    <meta charset="UTF-8">
     <title>備品を追加</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            width: 50%;
-            margin: auto;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input[type="text"],
-        .form-group input[type="number"],
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-        .form-group input[type="file"] {
-            width: 100%;
-        }
-        .form-group input[type="submit"] {
-            padding: 10px 20px;
-        }
-        nav {
-            background-color: #2c3e50;
-            padding: 10px 0;
-        }
-        nav a {
-            color: #ecf0f1;
-            margin: 0 15px;
-            text-decoration: none;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
+
 <body>
 
-<nav>
-    <a href="#">備品一覧</a>
-    <a href="#">発注履歴</a>
-    <div style="float: right;">
-        <a href="#">ユーザー一覧</a>
-        <a href="#">ログアウト</a>
-    </div>
-</nav>
-
 <div class="container">
-    <h1>備品を追加</h1>
-    <form method="post" enctype="multipart/form-data" action="#">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="name">名前:</label>
-            <input type="text" id="name" name="name">
+    <div class="box">
+        <h2>備品を追加</h2>
+        <form>
+        <div class= i-form>
+            <div class="form-group">
+                <label for="name">名前:</label>
+                <input type="text" id="name" name="name" class="wide">
+            </div>
+            <div class="form-group">
+                <label for="category">カテゴリ:</label>
+                <input type="text" id="category" name="category" class="wide">
+            </div>
+            <div class="form-group">
+                <label for="location">設置場所:</label>
+                <input type="text" id="location" name="location" class="wide">
+            </div>
+            <div class="form-group">
+                <label for="description">説明:</label>
+                <textarea id="description" name="description" class="wide"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="image">画像:</label>
+                <input type="file" id="image" name="image" class="wide">
+            </div>
+            <div class="form-group">
+                <label for="quantity">在庫数:</label>
+                <input type="number" id="quantity" name="quantity" value="1" class="wide">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="追加">
+            </div>
         </div>
-        <div class="form-group">
-            <label for="category">カテゴリ:</label>
-            <input type="text" id="category" name="category">
-        </div>
-        <div class="form-group">
-            <label for="status">状態:</label>
-            <input type="text" id="status" name="status" value="未承認">
-        </div>
-        <div class="form-group">
-            <label for="location">設置場所:</label>
-            <input type="text" id="location" name="location">
-        </div>
-        <div class="form-group">
-            <label for="description">説明:</label>
-            <textarea id="description" name="description"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="image">画像:</label>
-            <input type="file" id="image" name="image">
-        </div>
-        <div class="form-group">
-            <label for="stock_quantity">発注数:</label>
-            <input type="number" id="stock_quantity" name="stock_quantity" value="1">
-        </div>
-        <div class="form-group">
-            <input type="submit" value="追加">
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 </body>
-</html>
+
+{% endblock content %}

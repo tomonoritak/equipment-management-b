@@ -52,7 +52,8 @@
     .form-group input[type="text"],
     .form-group input[type="number"],
     .form-group textarea,
-    .form-group input[type="file"]{
+    .form-group input[type="file"],
+    .form-group select {
         width: 100%;
         padding: 8px;
         margin-left: 10px;
@@ -89,36 +90,45 @@
 <div class="container">
     <div class="box">
         <h2>備品を追加</h2>
-        <form>
-        <div class= i-form>
-            <div class="form-group">
-                <label for="name">名前:</label>
-                <input type="text" id="name" name="name" class="wide">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="i-form">
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">名前:</label>
+                    {{ form.name }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}">カテゴリ:</label>
+                    {{ form.category }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.location.id_for_label }}">設置場所:</label>
+                    {{ form.location }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">説明:</label>
+                    {{ form.description }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.image.id_for_label }}">画像:</label>
+                    {{ form.image }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.stock_quantity.id_for_label }}">在庫数:</label>
+                    {{ form.stock_quantity }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.status.id_for_label }}">状態:</label>
+                    {{ form.status }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.user.id_for_label }}">ユーザー:</label>
+                    {{ form.user }}
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="追加">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="category">カテゴリ:</label>
-                <input type="text" id="category" name="category" class="wide">
-            </div>
-            <div class="form-group">
-                <label for="location">設置場所:</label>
-                <input type="text" id="location" name="location" class="wide">
-            </div>
-            <div class="form-group">
-                <label for="description">説明:</label>
-                <textarea id="description" name="description" class="wide"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="image">画像:</label>
-                <input type="file" id="image" name="image" class="wide">
-            </div>
-            <div class="form-group">
-                <label for="quantity">在庫数:</label>
-                <input type="number" id="quantity" name="quantity" value="1" class="wide">
-            </div>
-            <div class="form-group">
-                <input type="submit" value="追加">
-            </div>
-        </div>
         </form>
     </div>
 </div>

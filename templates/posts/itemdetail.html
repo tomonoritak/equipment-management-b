@@ -39,7 +39,7 @@
         <div class="approval">
             <p>追加日時: {{ post.created_at }}</p>
             <p>ステータス: {{ post.status }}</p>
-            <form method="post" action="{% url 'Posts:itemdetail' post.pk %}">
+            <form method="post" action="{% url 'Posts:item_approve' post.pk %}">
                 {% csrf_token %}
                 <button type="submit" class="btn">承認</button>
             </form>

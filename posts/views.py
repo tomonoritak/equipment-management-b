@@ -71,3 +71,13 @@ class StockQuantityUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('Posts:itemdetail', kwargs={'pk': self.object.pk})
+    
+def approve_item(request, pk):
+    post = get_object_or_404(Posts, pk=pk)
+    
+    if request.method == 'POST':
+        post.status = '承認'  # または適切な承認ステータス
+        post.save()
+        return redirect('Posts:itemdetail', pk=post.pk)
+    
+    return redirect('Posts:itemdetail', pk=post.pk)

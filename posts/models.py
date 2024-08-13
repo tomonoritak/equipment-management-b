@@ -18,3 +18,9 @@ class Posts(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class StockHistory(models.Model):
+    post = models.ForeignKey('Posts', on_delete=models.CASCADE)
+    stock_quantity = models.PositiveIntegerField()
+    changed_at = models.DateTimeField(auto_now_add=True)

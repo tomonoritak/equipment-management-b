@@ -23,9 +23,15 @@
             <button type="submit" class="btn">更新</button>
         </div>
     </form>
-        <div class="history">
+    <div class="history">
         <h2>在庫数の変更履歴</h2>
-
+        <ul>
+            {% for history in post.stockhistory_set.all %}
+                <li>{{ history.changed_at }}: 在庫数 {{ history.stock_quantity }}</li>
+            {% empty %}
+                <li>変更履歴はありません。</li>
+            {% endfor %}
+        </ul>
     </div>
 
     <h2>発注依頼</h2>

@@ -35,3 +35,11 @@ class PostForm(forms.ModelForm):
             # ユーザー選択フィールドにデフォルト値を設定（例: 最初のユーザー）
             # もしデフォルトのユーザーが必要であれば設定する
             # self.fields['user'].initial = User.objects.first()
+
+class StockQuantityForm(forms.ModelForm):
+    class Meta:
+        model = Posts
+        fields = ['stock_quantity']
+        widgets = {
+            'stock_quantity': forms.NumberInput(attrs={'min': 0}),
+        }

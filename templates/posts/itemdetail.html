@@ -34,11 +34,18 @@
         </ul>
     </div>
 
-    <h2>発注依頼</h2>
-
-    <div class="approval">
-        <h2>発注依頼の承認</h2>
-    </div>
+    <h2>承認依頼</h2>
+    {% if post.status == '承認待ち' %}
+        <div class="approval">
+            <p>追加日時: {{ post.created_at }}</p>
+            <p>ステータス: {{ post.status }}</p>
+            <form method="post" action="{% url 'Posts:itemdetail' post.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn">承認</button>
+            </form>
+        </div>
+    {% else %}
+        <p>承認されています。</p>
+    {% endif %}
 </div>
-
 {% endblock content %}

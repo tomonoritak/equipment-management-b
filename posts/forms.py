@@ -3,6 +3,10 @@ from .models import Posts
 from django.contrib.auth.models import User
 
 class PostForm(forms.ModelForm):
+    STATUS_CHOICES = [
+        ('承認待ち', '承認待ち'),
+        ('承認', '承認'),
+    ]   
     class Meta:
         model = Posts
         fields = ['name', 'category', 'location', 'description', 'image', 'stock_quantity', 'status', 'user']
@@ -13,7 +17,6 @@ class PostForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'placeholder': 'Enter description', 'rows': 5}),
             'image': forms.ClearableFileInput(attrs={'multiple': False}),
             'stock_quantity': forms.NumberInput(attrs={'placeholder': 'Enter stock quantity'}),
-            'status': forms.TextInput(attrs={'placeholder': 'Enter status'}),
             'user': forms.Select()  # ドロップダウンリストとして表示
         }
         labels = {
@@ -26,14 +29,14 @@ class PostForm(forms.ModelForm):
             'status': 'Status',
             'user': 'User',
         }
+    status = forms.ChoiceField(choices=STATUS_CHOICES, widget=forms.Select)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # デフォルト値を設定
         if self.instance and self.instance.pk is None:
-            self.fields['status'].initial = '未承諾'
+            self.fields['status'].initial = '承認待ち'
             # ユーザー選択フィールドにデフォルト値を設定（例: 最初のユーザー）
-            # もしデフォルトのユーザーが必要であれば設定する
             # self.fields['user'].initial = User.objects.first()
 
 class StockQuantityForm(forms.ModelForm):

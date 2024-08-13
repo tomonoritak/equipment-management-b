@@ -17,28 +17,47 @@
             background-color: #34495e;
             color: white;
             padding: 10px;
-            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .header a {
             color: white;
             margin-left: 20px;
             text-decoration: none;
         }
+        .header a:first-child {
+            margin-left: 0;
+        }
     </style>
 </head>
 
 <body>
-  <div class="header">
-    <a href="{% url 'Posts:itemlist' %}">ホーム</a>
-    <a href="{% url 'Posts:orderhistory' %}">発注一覧</a>
-    <div style="float: right;">
-        <a href="#">ログイン</a>
-        <a href="#">登録</a>
-        <!-- ユーザのログイン状態と権限によって表示を変えるコードを後ほど記載する -->
+    <div class="header">
+        <div class="left-menu">
+            {% if user.is_authenticated %}
+                <a href="{% url 'Posts:itemlist' %}">備品一覧</a>
+                <a href="{% url 'Posts:orderhistory' %}">発注一覧</a>
+                            {% else %}
+                <a href="{% url 'Posts:index' %}">ホーム</a>
+                <a href="{% url 'Posts:itemlist' %}">備品一覧</a>          <!-- 将来消す --> 
+            {% endif %}
+        </div>
+        <div class="right-menu">
+            {% if user.is_authenticated %}
+                <a href="#">ユーザー一覧</a>
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
+                <form id="logout-form" action="#" method="post" style="display: none;">
+                    {% csrf_token %}
+                </form>
+            {% else %}
+                <a href="#">ログイン</a>
+                <a href="#">登録</a>
+            {% endif %}
+        </div>
     </div>
-  </div>
 
-  {% block content %}{% endblock content %}  
+    {% block content %}{% endblock content %}
 
 </body>
 </html>

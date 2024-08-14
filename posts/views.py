@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect,render
 from django.views.generic import ListView,CreateView,DetailView,UpdateView
 from django.urls import reverse_lazy
 from .models import Posts, StockHistory
@@ -19,10 +19,11 @@ class itemlistView(ListView):
     context_object_name = 'itemlist'
 
 class orderhistoryView(ListView):
-    model = Posts
+    model = StockHistory
     template_name = 'posts/orderhistory.html'
     context_object_name = 'orderhistory'
-
+    def get_queryset(self):
+        return StockHistory.objects.all().order_by('-changed_at')
 
 class itemCreateView(CreateView):
     form_class = PostForm
@@ -81,3 +82,4 @@ def approve_item(request, pk):
         return redirect('Posts:itemdetail', pk=post.pk)
     
     return redirect('Posts:itemdetail', pk=post.pk)
+

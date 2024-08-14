@@ -36,11 +36,13 @@
         
         <div class="form-group">
             <label for="{{ form.stock_quantity.id_for_label }}">在庫数:</label>
+            <!-- ここから変更できないようにして -->
             {{ form.stock_quantity }}
         </div>
         
         <div class="form-group">
-            <label for="{{ form.status.id_for_label }}">状態:</label>
+            <label for="{{ form.status.id_for_label }}">ステータス:</label>
+            <!-- 管理者のみ変更可能へ -->
             {{ form.status }}
         </div>
         
@@ -50,6 +52,7 @@
         </div>
         
         <button type="submit" class="btn">保存</button>
+         <!-- <button type="submit" class="btn">消去機能を追加予定</button> -->
     </form>
 </div>
 

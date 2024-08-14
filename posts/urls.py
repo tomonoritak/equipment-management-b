@@ -1,4 +1,5 @@
 from django.urls import path
+from . import views  # viewsをインポート
 from .views import IndexView, itemCreateView, itemlistView, itemDetailView, itemeditView,orderhistoryView,StockQuantityUpdateView
 
 app_name = 'Posts'
@@ -10,4 +11,5 @@ urlpatterns = [
     path('itemlist/<int:pk>/', itemDetailView.as_view(), name='itemdetail'),
     path('itemlist/<int:pk>/edit', itemeditView.as_view(), name='itemedit'),
     path('item/<int:pk>/update_stock/', StockQuantityUpdateView.as_view(), name='stock_quantity_update'), 
-]
+    path('item/<int:pk>/approve/', views.approve_item, name='item_approve'),
+    ]

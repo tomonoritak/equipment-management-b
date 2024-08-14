@@ -29,28 +29,10 @@
         font-size: 30px;
     }
 
-    .additem-button {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 20px 0;
-        background-color: #3498db;
-        color: white;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-        text-align: center;
-        width: 100px;
-    }
-
-    .additem-button:hover {
-        background-color: #2980b9;
-    }
-
     .itemlist, .item_row {
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        padding-right: 30px;
         font-weight: bold;
         border-bottom: 1px solid #ccc;
         margin-bottom: 5px;
@@ -70,15 +52,6 @@
         border-bottom: 1px solid #ddd;
     }
 
-    .item_row a {
-        color: #3498db;
-        text-decoration: none;
-    }
-
-    .item_row a:hover {
-        text-decoration: underline;
-    }
-
     ul {
         list-style-type: none;
         padding: 0;
@@ -88,24 +61,26 @@
 
 <div class="container">
     <div class="box">
-        <h1>備品履歴</h1>
+        <h1>発注履歴</h1>
         
         <div class="itemlist">
-            <div class="item-time">発注日</div>            
+            <div class="item-time">変更日時</div>            
             <div class="item-name">備品名</div>
             <div class="item-quantity">在庫数</div>
             <div class="item-status">ステータス</div>
         </div>
         <ul>
-            {% for post in itemlist %}
+            {% for history in orderhistory %}
                 <li>
                     <div class="item_row">
-                        <div class="item-category">{{ post.created_at }}</div>
-                        <div class="item-name">{{ post.name }}</div>
-                        <div class="item-quantity">{{ post.stock_quantity }}</div>
-                        <div class="item-status">{{ post.status }}</div>
-                    </div>
+                        <div class="item-time">{{ history.changed_at }}</div>            
+                        <div class="item-name"><a href="{% url 'Posts:itemdetail' pk=history.post.id %}">{{ history.post.name }}</a></div>
+                        <div class="item-quantity">{{ history.stock_quantity }}</div>
+                        <div class="item-status">{{ history.post.status }}</div>
+                                </div>
                 </li>
+            {% empty %}
+                <li>発注履歴はありません。</li>
             {% endfor %}
         </ul>
     </div>

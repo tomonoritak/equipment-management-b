@@ -39,11 +39,13 @@
             {{ form.stock_quantity }}
         </div>
 
+        {% if user.is_authenticated %}
         <div class="form-group">
             <label for="{{ form.status.id_for_label }}">ステータス:</label>
-            <!-- ここではステータスは承認待ちしか選べない。あるいは承認者以外に表示させない -->
+            <!-- ここではステータスは承認待ちしか選べない。あるいは承認者以外に表示させない    済 -->
             {{ form.status }}
         </div>
+        {% endif %}
 
         <div class="form-group">
             <label for="{{ form.user.id_for_label }}">ユーザー:</label>

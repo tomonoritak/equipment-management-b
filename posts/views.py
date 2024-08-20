@@ -1,12 +1,9 @@
-from django.shortcuts import get_object_or_404, redirect,render
-from django.views.generic import ListView,CreateView,DetailView,UpdateView
-from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView, CreateView, DetailView, UpdateView
+from django.urls import reverse_lazy, reverse
 from .models import Posts, StockHistory
-from .forms import PostForm,StockQuantityForm
-from django.urls import reverse
+from .forms import PostForm, StockQuantityForm
 from django.contrib import messages
-from django.views.generic.edit import FormView
-
 
 class IndexView(ListView):
     model = Posts
@@ -22,6 +19,7 @@ class orderhistoryView(ListView):
     model = StockHistory
     template_name = 'posts/orderhistory.html'
     context_object_name = 'orderhistory'
+
     def get_queryset(self):
         return StockHistory.objects.all().order_by('-changed_at')
 
@@ -40,6 +38,12 @@ class itemDetailView(DetailView):
     template_name = 'posts/itemdetail.html'
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        context['stock_histories'] = post.stockhistory_set.order_by('-changed_at')[:10]
+        return context
+
 class itemeditView(UpdateView):
     model = Posts
     form_class = PostForm
@@ -52,7 +56,7 @@ class itemeditView(UpdateView):
 
     def get_success_url(self):
         return reverse('Posts:itemdetail', kwargs={'pk': self.object.pk})
-    
+
 class StockQuantityUpdateView(UpdateView):
     model = Posts
     form_class = StockQuantityForm
@@ -61,7 +65,6 @@ class StockQuantityUpdateView(UpdateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         
-        # 在庫数を保存
         new_stock_quantity = form.cleaned_data['stock_quantity']
         StockHistory.objects.create(
             post=self.object,
@@ -72,7 +75,7 @@ class StockQuantityUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('Posts:itemdetail', kwargs={'pk': self.object.pk})
-    
+
 def approve_item(request, pk):
     post = get_object_or_404(Posts, pk=pk)
     
@@ -82,4 +85,3 @@ def approve_item(request, pk):
         return redirect('Posts:itemdetail', pk=post.pk)
     
     return redirect('Posts:itemdetail', pk=post.pk)
-

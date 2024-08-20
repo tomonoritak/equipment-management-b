@@ -86,25 +86,27 @@
             text-decoration: underline;
         }
     </style>
-<body>
-    <div class="container">
-        <div class="box">
-            <h1>ログイン</h1>
-            <form class="login-container">
-                <div class="login-row">
-                    <label for="username">ユーザー名:</label>
-                    <input type="text" id="username" name="username">
-                </div>
-                <div class="login-row">
-                    <label for="password">パスワード:</label>
-                    <input type="password" id="password" name="password">
-                </div>
-                <button type="submit">ログイン</button>
-            </form>
-            <p>アカウントをお持ちでないですか？<a href="#">登録はこちら。</a></p>
+    <body>
+        <div class="container">
+            <div class="box">
+                <h1>ログイン</h1>
+                <form method="POST" class="login-container">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="login-row">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                        {{ form.username.errors }}
+                    </div>
+                    <div class="login-row">
+                        {{ form.password.label_tag }}
+                        {{ form.password }}
+                        {{ form.password.errors }}
+                    </div>
+                    <button type="submit">ログイン</button>
+                </form>
+                <p>アカウントをお持ちでないですか？<a href="{% url 'users:sign_up' %}">登録はこちら。</a></p>
+            </div>
         </div>
-    </div>
-</body>
-</html>
-
-{% endblock content %}
+    </body>
+    {% endblock content %}

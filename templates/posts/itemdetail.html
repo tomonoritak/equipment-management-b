@@ -33,29 +33,35 @@
         </form>
         <div class="history">
             <h2>在庫数の変更履歴</h2>
-             <!-- 最新の10個程度を表示したい -->
-            {% for history in post.stockhistory_set.all|slice:":10" %}
-            <li>{{ history.changed_at }}: 在庫数 {{ history.stock_quantity }}</li>
-        {% empty %}
-            <li>変更履歴はありません。</li>
-        {% endfor %}
+             <!-- 最新の10個程度を表示したい    済 -->
+             <ul>
+                {% for history in stock_histories %}
+                    <li>{{ history.changed_at }}: 在庫数 {{ history.stock_quantity }}</li>
+                {% empty %}
+                    <li>変更履歴はありません。</li>
+                {% endfor %}
+            </ul>
         </div>
     {% endif %}
     
-<!-- 管理者のみ表示 -->
+<!-- 管理者のみ表示    済 -->
 
     <h2>承認依頼</h2>
-    {% if post.status == '承認待ち' %}
-        <div class="approval">
-            <p>追加日時: {{ post.created_at }}</p>
-            <p>ステータス: {{ post.status }}</p>
-            <form method="post" action="{% url 'Posts:item_approve' post.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="btn">承認</button>
-            </form>
-        </div>
+    {% if user.is_authenticated %}
+        {% if post.status == '承認待ち' %}
+            <div class="approval">
+                <p>追加日時: {{ post.created_at }}</p>
+                <p>ステータス: {{ post.status }}</p>
+                <form method="post" action="{% url 'Posts:item_approve' post.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">承認</button>
+                </form>
+            </div>
+        {% else %}
+            <p>承認されています。</p>
+        {% endif %}
     {% else %}
-        <p>承認されています。</p>
+        <p>管理者ではないため、承認依頼は表示されません。</p>
     {% endif %}
 </div>
 {% endblock content %}

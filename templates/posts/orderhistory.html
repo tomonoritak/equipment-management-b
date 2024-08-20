@@ -36,6 +36,8 @@
         font-weight: bold;
         border-bottom: 1px solid #ccc;
         margin-bottom: 5px;
+        max-height: calc(100vh - 140px);
+        overflow-y: auto;
     }
 
     .itemlist div, .item_row div {
@@ -62,21 +64,25 @@
 <div class="container">
     <div class="box">
         <h1>発注履歴</h1>
-        
+        <!-- 備品を追加した際も発注一覧に反映させたい。現状在庫変更時のみ。備品追加時もデータベースへ保存するよう修正 -->
         <div class="itemlist">
             <div class="item-time">変更日時</div>            
             <div class="item-name">備品名</div>
             <div class="item-quantity">在庫数</div>
             <div class="item-status">ステータス</div>
-        </div>
+            <div class="item-user">ユーザー</div>
+       </div>
         <ul>
             {% for history in orderhistory %}
                 <li>
                     <div class="item_row">
+<!-- これを新しい順に並べ替え。増加数（発注分）の表示もしたい。減るのは載せない。そのために備品ごとの増減を取得したい。多分ビューをいじる
+ 備品ごとに５つくらい表示できればよい？-->
                         <div class="item-time">{{ history.changed_at }}</div>            
                         <div class="item-name"><a href="{% url 'Posts:itemdetail' pk=history.post.id %}">{{ history.post.name }}</a></div>
                         <div class="item-quantity">{{ history.stock_quantity }}</div>
                         <div class="item-status">{{ history.post.status }}</div>
+                        <!-- ユーザーも追加 -->
                                 </div>
                 </li>
             {% empty %}

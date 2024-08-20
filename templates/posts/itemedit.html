@@ -1,12 +1,8 @@
-<!--備品編集画面-->
-
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
 
 <link rel="stylesheet" href="{% static 'css/posts.css' %}">
-
-<title>備品編集画面</title>
 
 <div class="container">
     <h1>備品を編集</h1>
@@ -40,17 +36,15 @@
         
         <div class="form-group">
             <label for="{{ form.stock_quantity.id_for_label }}">在庫数:</label>
-            <!-- ここから変更できないようにして    済 -->
-            <input type="text" id="{{ form.stock_quantity.id_for_label }}" name="{{ form.stock_quantity.html_name }}" value="{{ form.stock_quantity.value }}" readonly>
+            <!-- ここから変更できないようにして -->
+            {{ form.stock_quantity }}
         </div>
         
-        {% if user.is_authenticated %}
         <div class="form-group">
             <label for="{{ form.status.id_for_label }}">ステータス:</label>
-            <!-- 管理者のみ変更可能へ    済 -->
+            <!-- 管理者のみ変更可能へ -->
             {{ form.status }}
         </div>
-        {% endif %}
         
         <div class="form-group">
             <label for="{{ form.user.id_for_label }}">ユーザー:</label>

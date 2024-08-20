@@ -39,10 +39,6 @@ class itemDetailView(DetailView):
     model = Posts
     template_name = 'posts/itemdetail.html'
     context_object_name = 'post'
-    def get_querysetl(request, pk):
-        post = Posts.objects.get(pk=pk)
-        stock_histories = post.stockhistory_set.order_by('-changed_at')[:10]
-        return render(request, 'post_detail.html', {'post': post, 'stock_histories': stock_histories})
 
 class itemeditView(UpdateView):
     model = Posts

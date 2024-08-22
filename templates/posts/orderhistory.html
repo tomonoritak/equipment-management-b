@@ -5,16 +5,19 @@
 <style>
     .container {
         display: flex;
+        flex-direction: column;
         height: calc(100vh - 40px);
         width: 80%;
+        max-width: 1200px; /* 最大幅を設定 */
         margin: 10px auto;
+        overflow-y: auto; /* 縦スクロールを追加 */
     }
     .box {
         background-color: white;
         padding: 20px;
         margin: 15px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        height: 100%;  /* 高さを100%に設定 */
+        height: auto; /* 高さを自動に設定して内容に合わせる */
         width: 100%;   /* 幅を100%に設定 */
         display: flex;
         flex-direction: column;
@@ -29,48 +32,59 @@
         font-size: 30px;
     }
 
-    .itemlist, .item_row {
+    .itemlist {
         display: flex;
         justify-content: space-between;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         font-weight: bold;
-        border-bottom: 1px solid #ccc;
-        margin-bottom: 5px;
-        max-height: calc(100vh - 140px);
-        overflow-y: auto;
+        border-bottom: 2px solid #333; /* ヘッダー行のボーダーを強調 */
+        margin-bottom: 10px; /* 内容とヘッダー間にスペースを追加 */
+        padding: 5px 0; /* 上下にパディングを追加 */
+        background-color: #f4f4f4; /* 背景色を薄く */
+        box-sizing: border-box; /* パディングとボーダーを含むサイズ計算 */
+        height: 40px; /* ヘッダーの高さを指定 */
     }
-
-    .itemlist div, .item_row div {
+    
+    .itemlist div {
         flex: 1;
         padding: 5px;
         text-align: center;
+        font-weight: bold;
     }
-
-    .itemlist div:first-child, .item_row div:first-child {
-        flex: 2;  /* 名前のカラムを広く設定 */
-    }
-
+    
     .item_row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
         border-bottom: 1px solid #ddd;
+        padding: 3px 0; /* 上下にパディングを追加 */
+        box-sizing: border-box; /* パディングとボーダーを含むサイズ計算 */
+        height: 40px; /* 行の高さを指定 */
+        overflow: hidden; /* はみ出すコンテンツを隠す */
     }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
+    
+    .item_row div {
+        flex: 1;
+        padding: 2px;
+        text-align: center;
+        box-sizing: border-box; /* パディングを含むサイズ計算 */
+        overflow: hidden; /* 内容がはみ出さないように */
+        height: 100%; /* 親要素の高さに合わせる */
     }
+    
 </style>
 
 <div class="container">
     <div class="box">
         <h1>発注履歴</h1>
-        <!-- 備品を追加した際も発注一覧に反映させたい。現状在庫変更時のみ。備品追加時もデータベースへ保存するよう修正 -->
+        <!-- 備品を追加した際も発注一覧に反映させたい。
+            現状在庫変更時のみ。備品追加時もデータベースへ保存するよう修正 ：済 -->
         <div class="itemlist">
             <div class="item-time">変更日時</div>            
             <div class="item-name">備品名</div>
             <div class="item-quantity">在庫数</div>
             <div class="item-status">ステータス</div>
-            <div class="item-user">ユーザー</div>
+            <!-- <div class="item-user">ユーザー</div> -->
        </div>
         <ul>
             {% for history in orderhistory %}
@@ -83,7 +97,7 @@
                         <div class="item-quantity">{{ history.stock_quantity }}</div>
                         <div class="item-status">{{ history.post.status }}</div>
                         <!-- ユーザーも追加 -->
-                                </div>
+                    </div>
                 </li>
             {% empty %}
                 <li>発注履歴はありません。</li>

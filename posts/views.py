@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView, CreateView, DetailView, UpdateView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView,DeleteView
 from django.urls import reverse_lazy, reverse
 from .models import Posts, StockHistory
 from .forms import PostForm, StockQuantityForm
@@ -31,6 +31,13 @@ class itemCreateView(CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.save()
+
+        # 新しい備品が作成された際に、StockHistory にもレコードを追加
+        StockHistory.objects.create(
+            post=post,
+            stock_quantity=post.stock_quantity,
+        )
+
         return super().form_valid(form)
 
 class itemDetailView(DetailView):
@@ -85,3 +92,7 @@ def approve_item(request, pk):
         return redirect('Posts:itemdetail', pk=post.pk)
     
     return redirect('Posts:itemdetail', pk=post.pk)
+
+class DeleteView(DeleteView):
+    model = Posts
+    success_url = reverse_lazy("Posts:itemlist")

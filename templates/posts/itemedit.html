@@ -66,6 +66,12 @@
         transition: background-color 0.3s ease, transform 0.3s ease; /* 背景色とトランスフォームの遷移効果 */
       }
 
+      .item_btn{
+        display:flex;
+        gap: 10px; /* ボタン間の隙間を10pxに設定 */
+        justify-content: center; /* ボタンを中央に揃える */
+      }
+
 </style>
 
 <title>備品編集画面</title>
@@ -119,13 +125,19 @@
             {{ form.user }}
         </div>
         
-        <button type="submit" class="btn">保存</button>
-        <!-- 削除用のフォーム -->
-        <form action="{% url 'Posts:delete' posts.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">削除</button>
-        </form>
+        <div class="item_btn">
+            <div>
+            <button type="submit" class="btn">保存</button>
+            </div>
     </form>
+        <!-- 削除用のフォーム -->
+            <div>
+            <form action="{% url 'Posts:delete' posts.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">削除</button>
+            </form>
+            </div>
+    
 </div>
 
 {% endblock content %}

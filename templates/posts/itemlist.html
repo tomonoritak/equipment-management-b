@@ -107,7 +107,15 @@
                         <div class="item-category">{{ post.category }}</div>
                         <div class="item-place">{{ post.location }}</div>
                         <div class="item-quantity">{{ post.stock_quantity }}</div>
-                        <div class="item-status">{{ post.status }}</div>
+                        <div class="item-status">
+<!-- ●須貝さん修正しました。確認お願いします。↓ -->
+                            {% if post.status == "承認" %}
+                                <span style="color: green;">{{ post.status }}</span>
+                            {% elif post.status == "承認待ち" %}
+                                <span style="color: red;">{{ post.status }}</span>
+                            {% endif %}
+<!-- ●須貝さん修正しました。確認お願いします。↑ -->
+                         </div>
                     </div>
                 </li>
             {% endfor %}

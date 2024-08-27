@@ -94,12 +94,12 @@
                     {% csrf_token %}
                     {{ form.non_field_errors }}
                     <div class="login-row">
-                        {{ form.username.label_tag }}
+                        <label for="{{ form.username.id_for_label }}">ユーザー名:</label>
                         {{ form.username }}
                         {{ form.username.errors }}
                     </div>
                     <div class="login-row">
-                        {{ form.password.label_tag }}
+                        <label for="{{ form.password.id_for_label }}">パスワード:</label>
                         {{ form.password }}
                         {{ form.password.errors }}
                     </div>

@@ -69,9 +69,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'equipment-management-b',
+        'NAME': 'equipment_management_local',
         'USER': 'postgres',
-        'PASSWORD': '    ', #ご自身の設定したパスワードを設定しましょう
+        'PASSWORD': 'yhmk271098', #ご自身の設定したパスワードを設定しましょう
         'HOST': 'localhost',
         'PORT': '5432',
     }

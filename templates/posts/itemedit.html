@@ -112,7 +112,7 @@
             <input type="text" id="{{ form.stock_quantity.id_for_label }}" name="{{ form.stock_quantity.html_name }}" value="{{ form.stock_quantity.value }}" readonly>
         </div>
         
-        {% if user.is_authenticated %}
+        {% if user.is_superuser %} <!-- ●須貝さん修正しました。確認お願いします。 -->
         <div class="form-group">
             <label for="{{ form.status.id_for_label }}">ステータス:</label>
             <!-- 管理者のみ変更可能へ    済 -->

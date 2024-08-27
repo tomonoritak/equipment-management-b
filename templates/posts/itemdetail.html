@@ -100,22 +100,31 @@
              <!-- 最新の10個程度を表示したい    済 -->
              <ul>
                 {% for history in stock_histories %}
-                    <li>{{ history.changed_at }}: 在庫数 {{ history.stock_quantity }}</li>
+                    <li>{{ history.changed_at|date:"Y/m/d H:i" }}: 在庫数 {{ history.stock_quantity }}</li><!-- ●須貝さん修正しました。確認お願いします。-->
                 {% empty %}
                     <li>変更履歴はありません。</li>
                 {% endfor %}
             </ul>
         </div>
     {% endif %}
-    
+
 <!-- 管理者のみ表示    済 -->
 
     <h2>承認依頼</h2>
-    {% if user.is_authenticated %}
+    {% if user.is_superuser %}<!-- ●須貝さん修正しました。確認お願いします。 -->
         {% if post.status == '承認待ち' %}
             <div class="approval">
                 <p>追加日時: {{ post.created_at }}</p>
-                <p>ステータス: {{ post.status }}</p>
+<!-- ●須貝さん修正しました。確認お願いします。↓ -->
+                <p>
+                    ステータス: 
+                    {% if post.status == "承認" %}
+                        <span style="color: green;">{{ post.status }}</span>
+                    {% elif post.status == "承認待ち" %}
+                        <span style="color: red;">{{ post.status }}</span>
+                    {% endif %}
+                </p>
+<!-- 須貝さん修正しました。確認お願いします。↑ -->
                 <form method="post" action="{% url 'Posts:item_approve' post.pk %}">
                     {% csrf_token %}
                     <button type="submit" class="btn">承認</button>

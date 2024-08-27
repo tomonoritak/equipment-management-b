@@ -97,10 +97,18 @@
                     <div class="item_row">
 <!-- これを新しい順に並べ替え。増加数（発注分）の表示もしたい。減るのは載せない。そのために備品ごとの増減を取得したい。多分ビューをいじる
  備品ごとに５つくらい表示できればよい？-->
-                        <div class="item-time">{{ history.changed_at }}</div>            
+                        <div class="item-time">{{ history.changed_at|date:"Y/m/d H:i" }}</div><!-- ●須貝さん修正しました。確認お願いします。-->
                         <div class="item-name"><a href="{% url 'Posts:itemdetail' pk=history.post.id %}">{{ history.post.name }}</a></div>
                         <div class="item-quantity">{{ history.stock_quantity }}</div>
-                        <div class="item-status">{{ history.post.status }}</div>
+                        <div class="item-status">
+<!-- ●須貝さん修正しました。確認お願いします。↓ -->
+                        {% if history.post.status == "承認" %}
+                            <span style="color: green;">{{ history.post.status }}</span>
+                        {% elif history.post.status == "承認待ち" %}
+                            <span style="color: red;">{{ history.post.status }}</span>
+                        {% endif %}
+<!-- ●須貝さん修正しました。確認お願いします。↑ -->
+                        </div>
                         <!-- ユーザーも追加 -->
                         <div class="item-user">{{ history.user.username }}</div>
                     </div>

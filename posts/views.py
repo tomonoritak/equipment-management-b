@@ -36,6 +36,7 @@ class itemCreateView(CreateView):
         StockHistory.objects.create(
             post=post,
             stock_quantity=post.stock_quantity,
+            user=self.request.user  # ★ユーザー情報を追加
         )
 
         return super().form_valid(form)
@@ -75,7 +76,8 @@ class StockQuantityUpdateView(UpdateView):
         new_stock_quantity = form.cleaned_data['stock_quantity']
         StockHistory.objects.create(
             post=self.object,
-            stock_quantity=new_stock_quantity
+            stock_quantity=new_stock_quantity,
+            user=self.request.user  # ★ユーザー情報を追加
         )
         
         return response

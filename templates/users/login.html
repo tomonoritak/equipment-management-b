@@ -14,6 +14,7 @@
         .container {
             display: flex;
             justify-content: center;
+            align-items: flex-start;
             height: calc(100vh - 40px);
         }
         .box {
@@ -21,12 +22,13 @@
             padding: 20px;
             margin: 15px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            height: 50%;
             width: 95%;
             display: flex;
             flex-direction: column;
             align-items: center; 
             border-radius: 10px;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .box h1 {
@@ -36,6 +38,7 @@
             font-weight: normal;
             font-size:20px;
         }
+
         .login-container {
             width: 100%;
             max-width: 400px;
@@ -47,11 +50,13 @@
             align-items: center;
             margin-bottom: 15px;
         }
+
         .login-row label {
             width: 30%;
             text-align: right;
             margin-right: 10px;
         }
+
         .login-row input {
             width: 60%;
             padding: 10px;
@@ -59,6 +64,7 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
+
         .login-container button {
             display: block;
             width: auto;
@@ -71,20 +77,34 @@
             font-size: 14px;
             margin: 20px auto 0 auto; /* 上部余白追加と中央寄せ */
         }
+
         .login-container button:hover {
             background-color: #0056b3;
         }
+
         .login-container p {
             text-align: center;
             margin-top: 20px;
         }
+
         .login-container a {
             color: #007bff;
             text-decoration: none;
         }
+
         .login-container a:hover {
             text-decoration: underline;
         }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            text-align: left; /* 左寄せ */
+            width: 100%; /* ボックス内の幅に合わせる */
+            box-sizing: border-box; /* パディングを含めて幅を調整 */
+        }
+        
     </style>
     <body>
         <div class="container">
@@ -94,12 +114,12 @@
                     {% csrf_token %}
                     {{ form.non_field_errors }}
                     <div class="login-row">
-                        {{ form.username.label_tag }}
+                        <label for="{{ form.username.id_for_label }}">ユーザー名:</label>
                         {{ form.username }}
                         {{ form.username.errors }}
                     </div>
                     <div class="login-row">
-                        {{ form.password.label_tag }}
+                        <label for="{{ form.password.id_for_label }}">パスワード:</label>
                         {{ form.password }}
                         {{ form.password.errors }}
                     </div>

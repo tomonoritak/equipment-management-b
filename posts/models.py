@@ -24,3 +24,4 @@ class StockHistory(models.Model):
     post = models.ForeignKey('Posts', on_delete=models.CASCADE)
     stock_quantity = models.PositiveIntegerField()
     changed_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)  # ★ユーザー情報を追加

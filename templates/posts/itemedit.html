@@ -119,15 +119,18 @@
             {% endif %}
         </div>
 
+        <!-- ここではユーザー表示しなくても良いかも
         <div class="form-group">
             <label for="{{ form.user.id_for_label }}">ユーザー:</label>
             {{ form.user }}
         </div>
+        -->
 
         <div class="item_btn">
             <div>
               <button type="submit" class="btn">保存</button>
             </div>
+        </form>
 
             <!-- 削除用のフォーム -->
             <div>
@@ -137,8 +140,6 @@
                 </form>
             </div>
         </div>
-
-    </form>
 </div>
 
 {% endblock content %}

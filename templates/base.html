@@ -44,21 +44,29 @@
                 <a href="{% url 'Posts:index' %}">ホーム</a>
             {% endif %}
         </div>
-        <div class="right-menu">
-            {% if user.is_authenticated %}
-                <!-- ユーザーがログインしている場合 -->
-                {% if user.is_superuser %}
-                    <!-- superuserの場合 -->
-                    <a href="{% url 'users:userlist' %}">ユーザー一覧</a>
+        <div class="right-menu" style="display: flex; flex-direction: column; align-items: center;">
+            <div style="display: flex;">
+                {% if user.is_authenticated %}
+                    <!-- ユーザーがログインしている場合 -->
+                    {% if user.is_superuser %}
+                        <!-- superuserの場合 -->
+                        <a href="{% url 'users:userlist' %}" style="margin-right: 20px;">ユーザー一覧</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
+                    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                {% else %}
+                    <!-- ユーザーがログインしていない場合 -->
+                    <a href="{% url 'users:login' %}">ログイン</a>
+                    <a href="{% url 'users:sign_up' %}">登録</a>
                 {% endif %}
-                <a href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
-                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
-                    {% csrf_token %}
-                </form>
-            {% else %}
-                <!-- ユーザーがログインしていない場合 -->
-                <a href="{% url 'users:login' %}">ログイン</a>
-                <a href="{% url 'users:sign_up' %}">登録</a>
+            </div>
+            <!-- ユーザー名を中央に表示 -->
+            {% if user.is_authenticated %}
+                <span style="margin-top: 10px; text-align: center;">
+                    ユーザー名：{{ user.username }}{% if user.is_superuser %} (管理者){% endif %}
+                </span>
             {% endif %}
         </div>
     </div>

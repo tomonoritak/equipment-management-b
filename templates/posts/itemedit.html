@@ -132,6 +132,7 @@
             </div>
         </form>
 
+            {% if user.is_superuser %}
             <!-- 削除用のフォーム -->
             <div>
                 <form action="{% url 'Posts:delete' posts.id %}" method="post">
@@ -139,6 +140,7 @@
                     <button type="submit" class="btn btn-danger">削除</button>
                 </form>
             </div>
+            {% endif %}
         </div>
 </div>
 

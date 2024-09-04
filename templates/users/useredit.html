@@ -105,6 +105,13 @@
                 <div class="form-group">
                     <label>{{ form.is_superuser }} 管理者: 全ての権限を持っているとみなされます。</label>
                 </div>
+
+                {% if user.is_superuser %}  <!-- 管理者のみ表示 -->
+                <div class="form-group">
+                    <label>{{ form.delete_user }} このユーザーを削除する</label>
+                </div>
+                {% endif %}
+
                 <div class="form-group">
                     <button type="submit">保存</button>
                 </div>

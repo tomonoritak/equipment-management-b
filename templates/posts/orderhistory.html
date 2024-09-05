@@ -3,33 +3,40 @@
 {% block content %}
 
 <style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
     .container {
         display: flex;
         flex-direction: column;
         height: calc(100vh - 40px);
         width: 80%;
-        max-width: 1200px; /* 最大幅を設定 */
+        max-width: 1200px;
         margin: 10px auto;
-        overflow-y: auto; /* 縦スクロールを追加 */
+        overflow-y: auto;
     }
+
     .box {
         background-color: white;
         padding: 20px;
         margin: 15px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        height: auto; /* 高さを自動に設定して内容に合わせる */
-        width: 100%;   /* 幅を100%に設定 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
         display: flex;
         flex-direction: column;
-        border-radius: 10px;
     }
 
     .box h1 {
-        margin-top: 0;
-        margin-bottom: 20px;
+        margin: 0 0 20px 0;
         text-align: center;
         font-weight: bold;
         font-size: 30px;
+        color: #333;
     }
 
     .itemlist {
@@ -37,79 +44,91 @@
         justify-content: space-between;
         flex-wrap: nowrap;
         font-weight: bold;
-        border-bottom: 2px solid #333; /* ヘッダー行のボーダーを強調 */
-        margin-bottom: 10px; /* 内容とヘッダー間にスペースを追加 */
-        padding: 5px 0; /* 上下にパディングを追加 */
-        background-color: #f4f4f4; /* 背景色を薄く */
-        box-sizing: border-box; /* パディングとボーダーを含むサイズ計算 */
-        height: 40px; /* ヘッダーの高さを指定 */
+        border-bottom: 2px solid #333;
+        margin-bottom: 10px;
+        padding: 10px 0;
+        box-sizing: border-box;
+        height: auto; /* 高さを自動に設定 */
     }
-    
+
     .itemlist div {
         flex: 1;
-        padding: 5px;
+        padding: 10px;
         text-align: center;
-        font-weight: bold;
+        font-size: 16px; /* フォントサイズを調整 */
+        color: #444; /* 文字色を調整 */
     }
-    
+
     .item_row {
         display: flex;
         justify-content: space-between;
-        flex-wrap: wrap;
+        flex-wrap: nowrap; /* nowrapに変更 */
         border-bottom: 1px solid #ddd;
-        padding: 3px 0; /* 上下にパディングを追加 */
-        box-sizing: border-box; /* パディングとボーダーを含むサイズ計算 */
-        height: 40px; /* 行の高さを指定 */
-        overflow: hidden; /* はみ出すコンテンツを隠す */
+        padding: 10px 0;
+        box-sizing: border-box;
+        height: auto; /* 高さを自動に設定 */
+        overflow: hidden;
+        transition: background-color 0.3s;
     }
-    
+
+    .item_row:hover {
+        background-color: #f0f8ff;
+    }
+
     .item_row div {
         flex: 1;
-        padding: 2px;
+        padding: 10px;
         text-align: center;
-        box-sizing: border-box; /* パディングを含むサイズ計算 */
-        overflow: hidden; /* 内容がはみ出さないように */
-        height: 100%; /* 親要素の高さに合わせる */
+        font-size: 16px; /* フォントサイズを調整 */
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    .item_row a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .item_row a:hover {
+        color: #0056b3;
+        text-decoration: underline;
     }
 
     ul {
-        list-style-type: none; /* リストマーカーを非表示にする */
-        padding-left: 0; /* リストの左側のパディングを削除 */
+        list-style-type: none;
+        padding-left: 0;
+        margin: 0;
     }
-    
+
 </style>
 
 <div class="container">
     <div class="box">
         <h1>発注履歴</h1>
-        <!-- 備品を追加した際も発注一覧に反映させたい。
-            現状在庫変更時のみ。備品追加時もデータベースへ保存するよう修正 ：済 -->
         <div class="itemlist">
-            <div class="item-time">変更日時</div>            
+            <div class="item-time">変更日時</div>
             <div class="item-name">備品名</div>
             <div class="item-quantity">在庫数</div>
             <div class="item-status">ステータス</div>
             <div class="item-user">ユーザー</div>
-       </div>
+        </div>
         <ul>
             {% for history in orderhistory %}
                 <li>
                     <div class="item_row">
-<!-- これを新しい順に並べ替え。増加数（発注分）の表示もしたい。減るのは載せない。そのために備品ごとの増減を取得したい。多分ビューをいじる
- 備品ごとに５つくらい表示できればよい？-->
-                        <div class="item-time">{{ history.changed_at|date:"Y/m/d H:i" }}</div><!-- ●須貝さん修正しました。確認お願いします。-->
-                        <div class="item-name"><a href="{% url 'Posts:itemdetail' pk=history.post.id %}">{{ history.post.name }}</a></div>
+                        <div class="item-time">{{ history.changed_at|date:"Y/m/d H:i" }}</div>
+                        <div class="item-name">
+                            <a href="{% url 'Posts:itemdetail' pk=history.post.id %}">{{ history.post.name }}</a>
+                        </div>
                         <div class="item-quantity">{{ history.stock_quantity }}</div>
                         <div class="item-status">
-<!-- ●須貝さん修正しました。確認お願いします。↓ -->
-                        {% if history.post.status == "承認" %}
-                            <span style="color: green;">{{ history.post.status }}</span>
-                        {% elif history.post.status == "承認待ち" %}
-                            <span style="color: red;">{{ history.post.status }}</span>
-                        {% endif %}
-<!-- ●須貝さん修正しました。確認お願いします。↑ -->
+                            {% if history.post.status == "承認" %}
+                                <span style="color: green;">{{ history.post.status }}</span>
+                            {% elif history.post.status == "承認待ち" %}
+                                <span style="color: red;">{{ history.post.status }}</span>
+                            {% endif %}
                         </div>
-                        <!-- ユーザーも追加  済 -->
                         <div class="item-user">{{ history.user.username }}</div>
                     </div>
                 </li>

@@ -1,147 +1,207 @@
 {% extends "base.html" %}
 {% load static %}
-{% block content %}
-
-<!-- スタイルの修正部分 -->
-<style>
-  .container {
-      width: 80%;
-      min-width: 500px;
-      margin: 50px auto;
-      background-color: #fff;
-      border-radius: 5px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: auto;
-  }
-    
-  .box {
-      width: 100%;
-      margin: 10px auto;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-  }
-    
-  .form-group {
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-  }
-    
-  .form-group label {
-      margin-right: 10px;
-      flex: 0 0 150px;
-      text-align: left;
-      font-weight: bold;
-  }
-    
-  .form-group input[type="text"],
-  .form-group input[type="number"],
-  .form-group textarea,
-  .form-group input[type="file"],
-  .form-group select {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      max-width: 1500px;
-  }
-    
-  .btn {
-      padding: 10px 20px;
-      background-color: #007bff;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      font-size: 16px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-  }
-
-  .btn-danger {
-      background-color: #dc3545;
-  }
-
-  .btn-group {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
-  }
-</style>
-
-<!-- 保存と削除ボタンを横並びにする部分 -->
-<div class="container">
-  <h1>備品を編集</h1>
+{% block content %}<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
   
-  <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      
-      <!-- 名前入力フィールド -->
-      <div class="form-group">
-          <label for="{{ form.name.id_for_label }}">名前:</label>
-          {{ form.name }}
-      </div>
-      
-      <!-- カテゴリ選択フィールド -->
-      <div class="form-group">
-          <label for="{{ form.category.id_for_label }}">カテゴリ:</label>
-          {{ form.category }}
-      </div>
-      
-      <!-- 設置場所入力フィールド -->
-      <div class="form-group">
-          <label for="{{ form.location.id_for_label }}">設置場所:</label>
-          {{ form.location }}
-      </div>
-      
-      <!-- 説明入力フィールド -->
-      <div class="form-group">
-          <label for="{{ form.description.id_for_label }}">説明:</label>
-          {{ form.description }}
-      </div>
-      
-      <!-- 画像アップロードフィールド -->
-      <div class="form-group">
-          <label for="{{ form.image.id_for_label }}">画像:</label>
-          {{ form.image }}
-      </div>
-      
-      <!-- 在庫数表示フィールド（変更不可） -->
-      <div class="form-group">
-          <label for="{{ form.stock_quantity.id_for_label }}">在庫数:</label>
-          <input type="text" id="{{ form.stock_quantity.id_for_label }}" name="{{ form.stock_quantity.html_name }}" value="{{ form.stock_quantity.value }}" readonly>
-      </div>
+    .container {
+        width: 80%;
+        max-width: 1200px;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        box-sizing: border-box;
+    }
+  
+    h1 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-align: center;
+    }
+  
+    .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+  
+    .form-group label {
+        width: 200px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #444;
+        margin-right: 20px;
+        text-align: right;
+    }
+  
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group input[type="file"],
+    .form-group select {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-size: 16px;
+        color: #333;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    .form-group input[readonly] {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+  
+    .form-group img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+  
+    .btn {
+        padding: 12px 24px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 30px;
+        color: #fff;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+  
+    .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+  
+    .btn-danger {
+        background-color: #dc3545;
+    }
+  
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+  
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        margin-top: 30px;
+    }
+  
+    .checkbox-group {
+        align-items: center;
+        margin-top: 10px;
+    }
+  
 
-      <!-- 管理者のみ表示されるステータスフィールド -->
-      {% if user.is_superuser %}
-          <div class="form-group">
-              <label for="{{ form.status.id_for_label }}">ステータス:</label>
-              {{ form.status }}
-          </div>
-      {% else %}
-          <div class="form-group">
-              <label for="{{ form.status.id_for_label }}">ステータス:</label>
-              <input type="text" id="{{ form.status.id_for_label }}" name="{{ form.status.html_name }}" value="{{ form.status.value }}" readonly>
-          </div>
-      {% endif %}
-      
-
-      
-      <!-- 保存と削除ボタンを横並びにする部分 -->
-      <div class="btn-group">
-          <button type="submit" class="btn">保存</button>
-          <form action="{% url 'Posts:delete' posts.id %}" method="post">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-danger">削除</button>
-          </form>
-      </div>
-  </form>
-</div>
-{% endblock content %}
+    .checkbox-group label {
+        margin: 0; /* ラベルの余白を削除 */
+    }
+  </style>
+  
+  <!-- 保存と削除ボタンを横並びにする部分 -->
+  <div class="container">
+    <h1>備品を編集</h1>
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- 名前入力フィールド -->
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">名前:</label>
+            {{ form.name }}
+        </div>
+        
+        <!-- カテゴリ選択フィールド -->
+        <div class="form-group">
+            <label for="{{ form.category.id_for_label }}">カテゴリ:</label>
+            {{ form.category }}
+        </div>
+        
+        <!-- 設置場所入力フィールド -->
+        <div class="form-group">
+            <label for="{{ form.location.id_for_label }}">設置場所:</label>
+            {{ form.location }}
+        </div>
+        
+        <!-- 説明入力フィールド -->
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">説明:</label>
+            {{ form.description }}
+        </div>
+        
+        <!-- 画像アップロードフィールド -->
+        <div class="form-group">
+            <label for="{{ form.image.id_for_label }}">画像:</label>
+            {{ form.image }}
+        </div>
+        
+        <!-- 在庫数表示フィールド（変更不可） -->
+        <div class="form-group">
+            <label for="{{ form.stock_quantity.id_for_label }}">在庫数:</label>
+            <input type="text" id="{{ form.stock_quantity.id_for_label }}" name="{{ form.stock_quantity.html_name }}" value="{{ form.stock_quantity.value }}" readonly>
+        </div>
+  
+        <!-- 管理者のみ表示されるステータスフィールド -->
+        {% if user.is_superuser %}
+            <div class="form-group">
+                <label for="{{ form.status.id_for_label }}">ステータス:</label>
+                {{ form.status }}
+            </div>
+        {% else %}
+            <div class="form-group">
+                <label for="{{ form.status.id_for_label }}">ステータス:</label>
+                <input type="text" id="{{ form.status.id_for_label }}" name="{{ form.status.html_name }}" value="{{ form.status.value }}" readonly>
+            </div>
+        {% endif %}
+        
+        <!-- 保存ボタン -->
+        <div class="btn-group">
+            <button type="submit" class="btn">保存</button>
+        </div>
+    </form>
+        {% if user.is_superuser %}
+        <!-- 削除フォームを保存ボタンの下に配置 -->
+        <div class="btn-group">
+            <form action="{% url 'Posts:delete' posts.id %}" method="post" id="delete-form">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除してもよろしいですか？');">削除</button>
+            </form> 
+        </div>
+        {% endif %}
+    
+  </div>
+  
+  <!-- 画像プレビューのスクリプト -->
+  <script>
+    function previewImage(event) {
+        var preview = document.getElementById('image-preview');
+        preview.innerHTML = ''; // 現在のプレビューをクリア
+        var file = event.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.createElement('img');
+                img.src = e.target.result;
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+  </script>
+  {% endblock content %}

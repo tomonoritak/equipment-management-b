@@ -41,7 +41,33 @@ class CustomUserCreationForm(UserCreationForm):
             'required': 'メールアドレスを入力してください。',
             'invalid': '有効なメールアドレスを入力してください。',
         }
+    
 
+class UserEditForm(forms.ModelForm):
+    delete_user = forms.BooleanField(required=False, label='ユーザーを削除')  # 削除用チェックボックスを追加
+
+    class Meta:
+        model = get_user_model()
+        fields = ('email', 'username', 'is_staff', 'is_superuser', 'delete_user')
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)  # 'user' 引数を取得して削除
+        super().__init__(*args, **kwargs)
+    
+        self.fields['username'].label = 'ユーザー名'
+        self.fields['username'].error_messages = {
+            'required': 'ユーザー名を入力してください。',
+            'unique': 'このユーザー名は既に使用されています。',
+        }
+        self.fields['email'].label = 'メールアドレス'
+        self.fields['email'].error_messages = {
+            'required': 'メールアドレスを入力してください。',
+            'invalid': '有効なメールアドレスを入力してください。',
+        }
+
+        # ログイン中のユーザーが管理者でない場合、削除チェックボックスを表示しない
+        if user and not user.is_superuser:
+            self.fields.pop('delete_user')
 
 
 

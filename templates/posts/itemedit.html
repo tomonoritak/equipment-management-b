@@ -1,143 +1,147 @@
-<!--備品編集画面-->
-
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
 
+<!-- スタイルの修正部分 -->
 <style>
-    .container {
-        width: 80%; /* ページ幅の80%に設定 */
-        min-width: 500px; /* 幅が500px以下にならないように設定 */
-        margin: 50px auto; /* 横方向の中央揃え（上下50pxの余白を設定） */
-        background-color: #fff; /* 背景色を白に設定 */
-        border-radius: 5px; /* 角を5px丸くする */
-        text-align: center; /* テキストを中央揃え */
-        display: flex; /* フレックスボックスでレイアウト */
-        flex-direction: column; /* コンテンツを縦方向に並べる */
-        align-items: center; /* コンテンツを中央揃え */
-        justify-content: center; /* コンテンツを中央に配置 */
-        height: auto; /* 高さはコンテンツに応じて自動調整 */
-      }
-      
-      .box {
-        width: 100%;
-        margin: 10px auto;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-      }
-      
-      .form-group {
-        margin-bottom: 15px; /* 下部に15pxの余白を設定 */
-        display: flex; /* フレックスボックスでレイアウト */
-        align-items: center; /* コンテンツを垂直方向に中央に揃える */
-      }
-      
-      .form-group label {
-        margin-right: 10px; /* ラベルと入力フィールドの間に10pxの余白を設定 */
-        flex: 0 0 150px; /* ラベルの幅を固定 */
-        text-align: left; /* ラベルのテキストを右揃え */
-        font-weight: bold; /* 文字を太字にする */
-      }
-      
-      .form-group input[type="text"],
-      .form-group input[type="number"],
-      .form-group textarea,
-      .form-group input[type="file"],
-      .form-group select {
-        flex: 1; /* 入力フィールドを残りのスペースに合わせて広げる */
-        padding: 10px; /* 内側の余白を10pxに設定 */
-        border: 1px solid #ccc; /* 薄い灰色のボーダーを設定 */
-        border-radius: 5px; /* 角を5px丸くする */
-        max-width: 1500px; /* 最大幅を500pxに制限 */
-      }
-      
-      /* ボタンの基本スタイル */
-      .btn {
-        padding: 10px 20px; /* 内側の余白（上下10px、左右20px） */
-        background-color: #007bff; /* 背景色（青） */
-        border: none; /* ボーダーなし */
-        border-radius: 5px; /* 角を5px丸くする */
-        color: white; /* 文字色を白に設定 */
-        font-size: 16px; /* 文字サイズを16pxに設定 */
-        text-align: center; /* 文字を中央揃え */
-        text-decoration: none; /* テキストの下線を削除 */
-        display: inline-block; /* 要素をインラインブロックにして、幅を設定 */
-        transition: background-color 0.3s ease, transform 0.3s ease; /* 背景色とトランスフォームの遷移効果 */
-      }
+  .container {
+      width: 80%;
+      min-width: 500px;
+      margin: 50px auto;
+      background-color: #fff;
+      border-radius: 5px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: auto;
+  }
+    
+  .box {
+      width: 100%;
+      margin: 10px auto;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+  }
+    
+  .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+  }
+    
+  .form-group label {
+      margin-right: 10px;
+      flex: 0 0 150px;
+      text-align: left;
+      font-weight: bold;
+  }
+    
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group textarea,
+  .form-group input[type="file"],
+  .form-group select {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      max-width: 1500px;
+  }
+    
+  .btn {
+      padding: 10px 20px;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+  }
 
-      .item_btn{
-        display:flex;
-        gap: 10px; /* ボタン間の隙間を10pxに設定 */
-        justify-content: center; /* ボタンを中央に揃える */
-      }
+  .btn-danger {
+      background-color: #dc3545;
+  }
 
+  .btn-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+  }
 </style>
 
-<title>備品編集画面</title>
-
+<!-- 保存と削除ボタンを横並びにする部分 -->
 <div class="container">
-    <h1>備品を編集</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <div class="form-group">
-            <label for="{{ form.name.id_for_label }}">名前:</label>
-            {{ form.name }}
-        </div>
-        
-        <div class="form-group">
-            <label for="{{ form.category.id_for_label }}">カテゴリ:</label>
-            {{ form.category }}
-        </div>
-        
-        <div class="form-group">
-            <label for="{{ form.location.id_for_label }}">設置場所:</label>
-            {{ form.location }}
-        </div>
-        
-        <div class="form-group">
-            <label for="{{ form.description.id_for_label }}">説明:</label>
-            {{ form.description }}
-        </div>
-        
-        <div class="form-group">
-            <label for="{{ form.image.id_for_label }}">画像:</label>
-            {{ form.image }}
-        </div>
-        
-        <div class="form-group">
-            <label for="{{ form.stock_quantity.id_for_label }}">在庫数:</label>
-            <!-- ここから変更できないようにして    済 -->
-            <input type="text" id="{{ form.stock_quantity.id_for_label }}" name="{{ form.stock_quantity.html_name }}" value="{{ form.stock_quantity.value }}" readonly>
-        </div>
-        
-        {% if user.is_superuser %} <!-- ●須貝さん修正しました。確認お願いします。 -->
-        <div class="form-group">
-            <label for="{{ form.status.id_for_label }}">ステータス:</label>
-            <!-- 管理者のみ変更可能へ    済 -->
-            {{ form.status }}
-        </div>
-        {% endif %}
-        
-        <div class="form-group">
-            <label for="{{ form.user.id_for_label }}">ユーザー:</label>
-            {{ form.user }}
-        </div>
-        
-        <div class="item_btn">
-            <div>
-            <button type="submit" class="btn">保存</button>
-            </div>
-    </form>
-        <!-- 削除用のフォーム -->
-            <div>
-            <form action="{% url 'Posts:delete' posts.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger">削除</button>
-            </form>
-            </div>
-    
-</div>
+  <h1>備品を編集</h1>
+  
+  <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <!-- 名前入力フィールド -->
+      <div class="form-group">
+          <label for="{{ form.name.id_for_label }}">名前:</label>
+          {{ form.name }}
+      </div>
+      
+      <!-- カテゴリ選択フィールド -->
+      <div class="form-group">
+          <label for="{{ form.category.id_for_label }}">カテゴリ:</label>
+          {{ form.category }}
+      </div>
+      
+      <!-- 設置場所入力フィールド -->
+      <div class="form-group">
+          <label for="{{ form.location.id_for_label }}">設置場所:</label>
+          {{ form.location }}
+      </div>
+      
+      <!-- 説明入力フィールド -->
+      <div class="form-group">
+          <label for="{{ form.description.id_for_label }}">説明:</label>
+          {{ form.description }}
+      </div>
+      
+      <!-- 画像アップロードフィールド -->
+      <div class="form-group">
+          <label for="{{ form.image.id_for_label }}">画像:</label>
+          {{ form.image }}
+      </div>
+      
+      <!-- 在庫数表示フィールド（変更不可） -->
+      <div class="form-group">
+          <label for="{{ form.stock_quantity.id_for_label }}">在庫数:</label>
+          <input type="text" id="{{ form.stock_quantity.id_for_label }}" name="{{ form.stock_quantity.html_name }}" value="{{ form.stock_quantity.value }}" readonly>
+      </div>
 
+      <!-- 管理者のみ表示されるステータスフィールド -->
+      {% if user.is_superuser %}
+          <div class="form-group">
+              <label for="{{ form.status.id_for_label }}">ステータス:</label>
+              {{ form.status }}
+          </div>
+      {% else %}
+          <div class="form-group">
+              <label for="{{ form.status.id_for_label }}">ステータス:</label>
+              <input type="text" id="{{ form.status.id_for_label }}" name="{{ form.status.html_name }}" value="{{ form.status.value }}" readonly>
+          </div>
+      {% endif %}
+      
+
+      
+      <!-- 保存と削除ボタンを横並びにする部分 -->
+      <div class="btn-group">
+          <button type="submit" class="btn">保存</button>
+          <form action="{% url 'Posts:delete' posts.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">削除</button>
+          </form>
+      </div>
+  </form>
+</div>
 {% endblock content %}

@@ -101,19 +101,17 @@
             {{ form.stock_quantity }}
         </div>
 
-        {% if user.is_authenticated %}
+        {% if user.is_superuser %}
         <div class="form-group">
             <label for="{{ form.status.id_for_label }}">ステータス:</label>
-            <!-- ここではステータスは承認待ちしか選べない。あるいは承認者以外に表示させない    済 -->
             {{ form.status }}
         </div>
-        {% endif %}
-
+    {% else %}
         <div class="form-group">
-            <label for="{{ form.user.id_for_label }}">ユーザー:</label>
-            <!-- ユーザーBD作成後連携 -->
-            {{ form.user }}
+            <label for="{{ form.status.id_for_label }}">ステータス:</label>
+            <input type="text" id="{{ form.status.id_for_label }}" name="{{ form.status.html_name }}" value="{{ form.status.value }}" readonly>
         </div>
+    {% endif %}
 
         <button type="submit" class="btn">保存</button>
     </form>

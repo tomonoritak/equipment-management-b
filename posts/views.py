@@ -2,8 +2,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView,DeleteView
 from django.urls import reverse_lazy, reverse
 from .models import Posts, StockHistory
-from .forms import PostForm, StockQuantityForm
+from .forms import PostForm, StockQuantityForm ,DepartmentForm
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 
 class IndexView(ListView):
     model = Posts
@@ -98,3 +99,15 @@ def approve_item(request, pk):
 class DeleteView(DeleteView):
     model = Posts
     success_url = reverse_lazy("Posts:itemlist")
+
+# 管理者だけがアクセスできるようにするデコレーター
+@user_passes_test(lambda u: u.is_superuser)
+def add_department(request):
+    if request.method == 'POST':
+        form = DepartmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("Posts:itemlist")  # 成功後のリダイレクト先
+    else:
+        form = DepartmentForm()
+    return render(request, 'posts/add_department.html', {'form': form})

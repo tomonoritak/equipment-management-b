@@ -13,6 +13,7 @@
             margin: 0;
             padding: 0;
         }
+
         .header {
             background-color: #34495e;
             color: white;
@@ -21,14 +22,64 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .header a {
             color: white;
             margin-left: 20px;
             text-decoration: none;
         }
+
         .header a:first-child {
             margin-left: 0;
         }
+
+        /* ユーザー名とユーザー一覧を横並びにするスタイル */
+        .right-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        /* プルダウンメニューのスタイル */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin-left: 20px; /* ユーザー名とユーザー一覧の間隔 */
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            width: 160px; /* 固定幅を設定 */
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            text-align: center; /* 中央揃え */
+            padding: 0; /* パディングをリセット */
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 0; /* 左右のパディングを0にする */
+            text-decoration: none;
+            display: block;
+            width: 100%; /* リンクを幅いっぱいにする */
+            box-sizing: border-box; /* padding や border が要素の幅に含まれるように */
+            text-align: center; /* リンクテキストを中央揃え */
+            margin: 0; /* マージンをリセット */
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+        }
+
     </style>
 </head>
 
@@ -42,38 +93,37 @@
             {% else %}
                 <!-- ユーザーがログインしていない場合 -->
                 <a href="{% url 'Posts:index' %}">ホーム</a>
-                {% endif %}
-            </div>
-            <div class="right-menu" style="display: flex; flex-direction: column; align-items: center;">
-                <div style="display: flex;">
-                    {% if user.is_authenticated %}
-                        <!-- ユーザーがログインしている場合 -->
-                        {% if user.is_superuser %}
-                            <!-- superuserの場合 -->
-                            <a href="{% url 'users:userlist' %}" style="margin-right: 20px;">ユーザー一覧</a>
-                        {% endif %}
-                        <a href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
-                        <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
-                            {% csrf_token %}
-                        </form>
-                    {% else %}
-                        <!-- ユーザーがログインしていない場合 -->
-                        <a href="{% url 'users:login' %}">ログイン</a>
-                        <a href="{% url 'users:sign_up' %}">登録</a>
-                    {% endif %}
-
-                </div>
-                <!-- ユーザー名を中央に表示 -->
-                {% if user.is_authenticated %}
-                    <span style="margin-top: 10px; text-align: center;">
-                        ユーザー名：{{ user.username }}{% if user.is_superuser %} (管理者){% endif %}
-                    </span>
-                {% endif %}
-            </div>
+            {% endif %}
         </div>
 
-        {% block content %}{% endblock content %}
+        <div class="right-menu">
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <!-- superuserの場合 -->
+                    <a href="{% url 'users:userlist' %}">ユーザー一覧</a>
+                {% endif %}
+                <!-- ユーザー名を表示 -->
+                <div class="dropdown">
+                    <span class="dropbtn" style="cursor: pointer;">
+                        ユーザー名：{{ user.username }}{% if user.is_superuser %} *管理者{% endif %}
+                    </span>
+                    <div class="dropdown-content">
+                        <a href="{% url 'users:useredit' user.id %}">編集</a>
+                        {% if user.is_superuser %}
+                        <a href="{% url 'Posts:department_add' %}">設定</a>
+                        {% endif %}
+                        <a href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">ログアウト</a>
+                    </div>
+                </div>
 
-        
-    </body>
-    </html>
+                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                    {% csrf_token %}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+
+    {% block content %}{% endblock content %}
+
+</body>
+</html>

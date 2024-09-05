@@ -1,15 +1,25 @@
 from django import forms
-from .models import Posts
+from .models import Posts, Department  # Departmentモデルをインポート
 from django.contrib.auth.models import User
 
 class PostForm(forms.ModelForm):
     STATUS_CHOICES = [
         ('承認待ち', '承認待ち'),
         ('承認', '承認'),
-    ]   
+    ]  
+
+        # department追加
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(),
+        required=False,
+        label='所属部署',
+        widget=forms.Select(attrs={'placeholder': '所属部署を選択'})
+    )
+
+    #fieldsとlabelsにdepartmentを追加
     class Meta:
         model = Posts
-        fields = ['name', 'category', 'location', 'description', 'image', 'stock_quantity', 'status', 'user']
+        fields = ['name', 'category', 'location', 'description', 'image', 'stock_quantity', 'status', 'user', 'department']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Enter name'}),
             'category': forms.TextInput(attrs={'placeholder': 'Enter category'}),
@@ -28,6 +38,7 @@ class PostForm(forms.ModelForm):
             'stock_quantity': 'Stock Quantity',
             'status': 'Status',
             'user': 'User',
+            'department': '所属部署',
         }
     status = forms.ChoiceField(choices=STATUS_CHOICES, widget=forms.Select)
 
@@ -45,4 +56,12 @@ class StockQuantityForm(forms.ModelForm):
         fields = ['stock_quantity']
         widgets = {
             'stock_quantity': forms.NumberInput(attrs={'min': 0}),
+        }
+
+class DepartmentForm(forms.ModelForm):
+    class Meta:
+        model = Department
+        fields = ['name']
+        labels = {
+            'name': '新規追加部署',
         }

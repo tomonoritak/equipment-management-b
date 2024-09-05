@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User  # ユーザーIDを参照するためにインポート
 
+#departmentフィールドを追加
+class Department(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Posts(models.Model):
     class Meta:
         db_table = 'posts'  # db_tableを'posts'に変更
@@ -15,6 +22,7 @@ class Posts(models.Model):
     stock_quantity = models.PositiveIntegerField()  # 在庫数カラム
     status = models.CharField(max_length=20, default='未承諾')  # デフォルト値を設定
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)  # ユーザーID（usersテーブルから） 
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True) # departmentフィールドの追加
 
     def __str__(self):
         return self.name

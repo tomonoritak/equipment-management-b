@@ -1,76 +1,184 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
 <style>
-    .container {
-        width: 80%; /* ページ幅の80%に設定 */
-        min-width: 500px; /* 幅が500px以下にならないように設定 */
-        margin: 50px auto; /* 横方向の中央揃え（上下50pxの余白を設定） */
-        background-color: #fff; /* 背景色を白に設定 */
-        border-radius: 5px; /* 角を5px丸くする */
-        text-align: center; /* テキストを中央揃え */
-        display: flex; /* フレックスボックスでレイアウト */
-        flex-direction: column; /* コンテンツを縦方向に並べる */
-        align-items: center; /* コンテンツを中央揃え */
-        justify-content: center; /* コンテンツを中央に配置 */
-        height: auto; /* 高さはコンテンツに応じて自動調整 */
-      }
-      
-      .box {
-        width: 100%;
-        margin: 10px auto;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-      }
-      
-      .form-group {
-        margin-bottom: 15px; /* 下部に15pxの余白を設定 */
-        display: flex; /* フレックスボックスでレイアウト */
-        align-items: center; /* コンテンツを垂直方向に中央に揃える */
-      }
-      
-      .form-group label {
-        margin-right: 10px; /* ラベルと入力フィールドの間に10pxの余白を設定 */
-        flex: 0 0 150px; /* ラベルの幅を固定 */
-        text-align: left; /* ラベルのテキストを右揃え */
-        font-weight: bold; /* 文字を太字にする */
-      }
-      
-      .form-group input[type="text"],
-      .form-group input[type="number"],
-      .form-group textarea,
-      .form-group input[type="file"],
-      .form-group select {
-        flex: 1; /* 入力フィールドを残りのスペースに合わせて広げる */
-        padding: 10px; /* 内側の余白を10pxに設定 */
-        border: 1px solid #ccc; /* 薄い灰色のボーダーを設定 */
-        border-radius: 5px; /* 角を5px丸くする */
-        max-width: 1500px; /* 最大幅を500pxに制限 */
-      }
-      
-      /* ボタンの基本スタイル */
-      .btn {
-        padding: 10px 20px; /* 内側の余白（上下10px、左右20px） */
-        background-color: #007bff; /* 背景色（青） */
-        border: none; /* ボーダーなし */
-        border-radius: 5px; /* 角を5px丸くする */
-        color: white; /* 文字色を白に設定 */
-        font-size: 16px; /* 文字サイズを16pxに設定 */
-        text-align: center; /* 文字を中央揃え */
-        text-decoration: none; /* テキストの下線を削除 */
-        display: inline-block; /* 要素をインラインブロックにして、幅を設定 */
-        transition: background-color 0.3s ease, transform 0.3s ease; /* 背景色とトランスフォームの遷移効果 */
-      }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
 
+    .container {
+        width: 80%;
+        min-width: 500px;
+        max-width: 1200px;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 28px;
+        color: #333;
+        margin: 0;
+        font-weight: 700;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .edit-btn {
+        display: inline-block;
+        margin-left: 20px;
+        vertical-align: middle;
+    }
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .form-group label {
+        width: 200px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #444;
+        margin-right: 20px;
+        text-align: right;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group input[type="file"],
+    .form-group select {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-size: 16px;
+        color: #333;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group input[readonly] {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+    }
+
+    .form-group img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 30px;
+        color: #fff;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        text-decoration: none;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        margin-top: 30px;
+    }
+
+    .checkbox-group {
+        align-items: center;
+        margin-top: 10px;
+    }
+
+    .checkbox-group label {
+        margin: 0;
+    }
+
+    .history, .approval {
+        margin-top: 30px;
+        text-align: left;
+        border-top: 1px solid #ddd;
+        padding-top: 20px;
+    }
+
+    .history ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .history li {
+        margin-bottom: 10px;
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .flex-container .section {
+        width: 1px;
+    }
+
+    .approval {
+        text-align: left;
+    }
+
+    .history {
+        text-align: left;
+    }
+
+    .centered-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .centered-content {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* コンテンツ間のスペースを10pxに設定 */
+}
 </style>
 
 <div class="container">
-    <h1>{{ post.name }}</h1>
-    <a href="{% url 'Posts:itemedit' post.pk %}" class="btn">編集</a>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <h1>{{ post.name }}</h1>
+        <a href="{% url 'Posts:itemedit' post.pk %}" class="btn edit-btn">編集</a>
+    </div>
     {% if post.image %}
-        <img src="{{ post.image.url }}" alt="{{ post.name }}" style="display: block; margin: 20px auto;">
+        <img src="{{ post.image.url }}" alt="{{ post.name }}" style="margin: 20px auto;">
     {% endif %}
     <p>説明: {{ post.description }}</p>
     <p>カテゴリ: {{ post.category }}</p>
@@ -95,46 +203,46 @@
                 <button type="submit" class="btn">更新</button>
             </div>
         </form>
-        <div class="history">
-            <h2>在庫数の変更履歴</h2>
-             <!-- 最新の10個程度を表示したい    済 -->
-             <ul>
-                {% for history in stock_histories %}
-                    <li>{{ history.changed_at|date:"Y/m/d H:i" }}: 在庫数 {{ history.stock_quantity }}</li><!-- ●須貝さん修正しました。確認お願いします。-->
-                {% empty %}
-                    <li>変更履歴はありません。</li>
-                {% endfor %}
-            </ul>
-        </div>
     {% endif %}
 
-<!-- 管理者のみ表示    済 -->
-
-    <h2>承認依頼</h2>
-    {% if user.is_superuser %}<!-- ●須貝さん修正しました。確認お願いします。 -->
-        {% if post.status == '承認待ち' %}
+    <div class="centered-container">
+        <div class="centered-content">
             <div class="approval">
-                <p>追加日時: {{ post.created_at }}</p>
-<!-- ●須貝さん修正しました。確認お願いします。↓ -->
-                <p>
-                    ステータス: 
-                    {% if post.status == "承認" %}
-                        <span style="color: green;">{{ post.status }}</span>
-                    {% elif post.status == "承認待ち" %}
-                        <span style="color: red;">{{ post.status }}</span>
+                <h2>承認依頼</h2>
+                {% if user.is_superuser %}
+                    {% if post.status == '承認待ち' %}
+                        <p>追加日時: {{ post.created_at }}</p>
+                        <p>
+                            ステータス: 
+                            {% if post.status == "承認" %}
+                                <span style="color: green;">{{ post.status }}</span>
+                            {% elif post.status == "承認待ち" %}
+                                <span style="color: red;">{{ post.status }}</span>
+                            {% endif %}
+                        </p>
+                        <form method="post" action="{% url 'Posts:item_approve' post.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn">承認</button>
+                        </form>
+                    {% else %}
+                        <p>承認されています。</p>
                     {% endif %}
-                </p>
-<!-- 須貝さん修正しました。確認お願いします。↑ -->
-                <form method="post" action="{% url 'Posts:item_approve' post.pk %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn">承認</button>
-                </form>
+                {% else %}
+                    <p>管理者ではないため、承認依頼は表示されません。</p>
+                {% endif %}
             </div>
-        {% else %}
-            <p>承認されています。</p>
-        {% endif %}
-    {% else %}
-        <p>管理者ではないため、承認依頼は表示されません。</p>
-    {% endif %}
+
+            <div class="history">
+                <h2>在庫数の変更履歴</h2>
+                <ul>
+                    {% for history in stock_histories %}
+                        <li>{{ history.changed_at|date:"Y/m/d H:i" }}: 在庫数 {{ history.stock_quantity }}</li>
+                    {% empty %}
+                        <li>変更履歴はありません。</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock content %}

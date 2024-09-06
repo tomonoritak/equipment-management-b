@@ -73,22 +73,34 @@
                     <th>管理者</th>
                     <th>操作</th>
                 </tr>
-                <tbody>
-                 <!-- データベースの内容に基づいて他の行をここに追加 -->
-                 {% for user in users %}
-                 <tr>
-                     <td>{{ user.username }}</td>
-                     <td>{{ user.email }}</td>
-                     <td>{{ user.is_staff }}</td>
-                     <td>{{ user.is_superuser }}</td>
-                     <td><a href="{% url 'users:useredit' user.pk %}">編集</a></td>
-                 </tr>
-                 {% endfor %}
-             </tbody>
             </thead>
+            <tbody>
+                {% if user.is_superuser %}
+                <!-- 管理者の場合、すべてのユーザー情報を表示 -->
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.is_staff }}</td>
+                    <td>{{ user.is_superuser }}</td>
+                    <td><a href="{% url 'users:useredit' user.pk %}">編集</a></td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <!-- 管理者でない場合、自分の情報だけを表示 -->
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.is_staff }}</td>
+                    <td>{{ user.is_superuser }}</td>
+                    <td><a href="{% url 'users:useredit' user.pk %}">編集</a></td>
+                </tr>
+                {% endif %}
+            </tbody>
         </table>
     </div>
-</div>
+  </div>
 </body>
+
 
 {% endblock content %}

@@ -169,6 +169,11 @@
                 <input type="text" id="{{ form.status.id_for_label }}" name="{{ form.status.html_name }}" value="{{ form.status.value }}" readonly>
             </div>
         {% endif %}
+
+        <div class="form-group">
+            <label for="{{ form.department.id_for_label }}">使用部署:</label>
+            {{ form.department }}
+          </div>
         
         <div class="btn-group">
             <button type="submit" class="btn">保存</button>

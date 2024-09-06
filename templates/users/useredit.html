@@ -99,6 +99,7 @@
                     <label for="email">メールアドレス:</label>
                     {{ form.email }}
                 </div>
+                {% if form.delete_user %}  <!-- delete_userフィールドが存在する場合のみ表示 -->
                 <div class="form-group">
                     <label>{{ form.is_staff }} スタッフ: ユーザーが管理サイトにログイン可能かどうかを示します。</label>
                 </div>
@@ -106,7 +107,6 @@
                     <label>{{ form.is_superuser }} 管理者: 全ての権限を持っているとみなされます。</label>
                 </div>
 
-                {% if form.delete_user %}  <!-- delete_userフィールドが存在する場合のみ表示 -->
                     <div class="form-group">
                       <label>{{ form.delete_user }} このユーザーを削除する</label>
                     </div>

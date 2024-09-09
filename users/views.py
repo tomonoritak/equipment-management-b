@@ -5,8 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 
 class CustomLoginView(LoginView):
     template_name = 'users/login.html'
@@ -55,4 +54,5 @@ class UserEditView(LoginRequiredMixin, UpdateView):
             return redirect(self.success_url)  # 削除後はユーザー一覧にリダイレクト
 
         return super().form_valid(form)
+
    

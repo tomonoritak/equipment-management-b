@@ -3,43 +3,55 @@
 {% block content %}
 
 <style>
-    .container {
-        width: 80%;
-        min-width: 500px;
-        margin: 50px auto;
-        background-color: #fff;
-        border-radius: 5px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: auto;
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
     }
 
-    /* ラベルと入力フィールドを横並びにする */
+    .container {
+        width: 80%;
+        max-width: 1200px;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-align: center;
+    }
+
     .form-row {
-        display: flex; /* 横並びにするためのフレックスボックス */
-        align-items: center; /* 縦方向の中央揃え */
-        margin-bottom: 10px; /* 各行に少し余白を追加 */
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
     }
 
     .form-row label {
-        width: 300px; /* ラベルの幅を固定 */
-        text-align: right; /* ラベルのテキストを右揃え */
-        margin-right: 20px; /* ラベルと入力フォームの間に余白を追加 */
+        width: 200px; /* ラベルの幅を調整 */
+        text-align: right;
+        margin-right: 20px;
+        font-weight: bold;
     }
 
     .form-row input {
-        flex-grow: 1; /* 入力フォームの幅を調整してラベルとバランスを取る */
-        padding: 5px; /* 入力フォームの余白 */
-        height: 40px; /* 入力フィールドの縦の高さを広げる */
-        font-size: 16px; /* 文字サイズも調整してバランスを取る */        
-        cursor: not-allowed;
-        border-radius: 10px;
+        flex-grow: 1;
+        padding: 10px;
+        height: 40px;
+        font-size: 16px;
+        border-radius: 5px;
         border: 1px solid #ddd;
-        width: 100%; /* 入力フィールドを親コンテナの幅に合わせる */
-        max-width: 400px; /* 最大幅を設定（必要に応じて調整） */
+        width: 100%;
+        max-width: 400px;
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
@@ -50,19 +62,62 @@
     }
 
     .btn {
-        padding: 10px 20px;
-        background-color: #007bff;
-        border: none;
-        border-radius: 5px;
-        color: white;
-        font-size: 16px;
-        text-align: center;
-        text-decoration: none;
         display: inline-block;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-        margin-top: 20px; /* ボタンの上に余白を追加 */
+        padding: 12px 24px;
+        margin: 20px 0;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        width: 100%;
+        box-sizing: border-box;
     }
 
+    .btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .departments-list {
+        margin-top: 30px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f4f4f9;
+        font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f0f8ff;
+    }
 </style>
 
 <div class="container">
@@ -70,13 +125,11 @@
     <form method="post">
         {% csrf_token %}
         
-        <!-- 部署名フィールドをラベルと横並びに表示 -->
         <div class="form-row">
-            {{ form.name.label_tag }} <!-- ここでラベルを表示 -->
-            {{ form.name }} <!-- ここで入力フィールドを表示 -->
+            {{ form.name.label_tag }}
+            {{ form.name }}
         </div>
 
-        <!-- エラーメッセージを表示 -->
         {% if form.name.errors %}
             <div class="error-message">
                 {% for error in form.name.errors %}
@@ -88,7 +141,6 @@
         <button type="submit" class="btn">保存</button>
     </form>
 
-    <!-- 部署の一覧を表示 -->
     <div class="departments-list">
         <h2>登録された部署一覧</h2>
         <table>

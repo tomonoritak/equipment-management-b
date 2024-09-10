@@ -17,7 +17,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'https://mysite-bzk3.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'mysite-bzk3.onrender.com']
 
 
 # Application definition

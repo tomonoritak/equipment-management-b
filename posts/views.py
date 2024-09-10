@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView,DeleteView
 from django.urls import reverse_lazy, reverse
-from .models import Posts, StockHistory
+from .models import Posts, StockHistory ,Department
 from .forms import PostForm, StockQuantityForm ,DepartmentForm
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
@@ -107,7 +107,13 @@ def add_department(request):
         form = DepartmentForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("Posts:itemlist")  # 成功後のリダイレクト先
+            return redirect("Posts:department_add")  # 成功後のリダイレクト先
     else:
         form = DepartmentForm()
-    return render(request, 'posts/add_department.html', {'form': form})
+    departments = Department.objects.all().order_by('name')  # 部署を名前順に取得
+
+    context = {
+        'form': form,
+        'departments': departments,
+    }
+    return render(request, 'posts/add_department.html', context)

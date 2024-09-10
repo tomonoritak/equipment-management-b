@@ -8,12 +8,25 @@ class PostForm(forms.ModelForm):
         ('承認', '承認'),
     ]  
 
+    CATEGORY_CHOICES = [
+        ('文房具', '文房具'),
+        ('電子機器', '電子機器'),
+        ('その他', 'その他'),
+    ]
+
         # department追加
     department = forms.ModelChoiceField(
         queryset=Department.objects.all(),
         required=False,
         label='所属部署',
         widget=forms.Select(attrs={'placeholder': '所属部署を選択'})
+    )
+
+    # カテゴリをプルダウンメニューに変更
+    category = forms.ChoiceField(
+        choices=CATEGORY_CHOICES,
+        label='カテゴリ',
+        widget=forms.Select(attrs={'placeholder': 'カテゴリを選択'})
     )
 
     #fieldsとlabelsにdepartmentを追加
@@ -50,6 +63,11 @@ class PostForm(forms.ModelForm):
             # ユーザー選択フィールドにデフォルト値を設定（例: 最初のユーザー）
             # self.fields['user'].initial = User.objects.first()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 部署を名前順に並べ替え
+        self.fields['department'].queryset = Department.objects.order_by('name')
+
 class StockQuantityForm(forms.ModelForm):
     class Meta:
         model = Posts
@@ -65,3 +83,7 @@ class DepartmentForm(forms.ModelForm):
         labels = {
             'name': '新規追加部署',
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 名前順に並べ替え
+        self.fields['name'].queryset = Department.objects.order_by('name')

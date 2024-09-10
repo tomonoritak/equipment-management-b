@@ -102,6 +102,16 @@
         height: calc(100vh - 500px); /* 高さを設定してスクロールを可能にする */
         overflow-y: auto; /* 垂直スクロールを有効にする */
     }
+
+    /* 使用部署の列 */
+    .item-department {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+        font-size: 16px;
+        color: #444;
+    }
+
 </style>
 
 <div class="container">
@@ -112,6 +122,7 @@
             <div class="item-name">備品名</div>
             <div class="item-quantity">在庫数</div>
             <div class="item-status">ステータス</div>
+            <div class="item-department">使用部署</div>
             <div class="item-user">ユーザー</div>
         </div>
         <ul>
@@ -130,6 +141,7 @@
                                 <span style="color: red;">{{ history.post.status }}</span>
                             {% endif %}
                         </div>
+                        <div class="item-department">{{ history.post.department.name|default:"未指定" }}</div>
                         <div class="item-user">{{ history.user.username }}</div>
                     </div>
                 </li>

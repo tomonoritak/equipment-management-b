@@ -3,7 +3,13 @@ from django.contrib.auth.models import User  # ユーザーIDを参照するた�
 
 #departmentフィールドを追加
 class Department(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(
+        max_length=100, 
+        unique=True,  # 部署名を一意にする
+        error_messages={
+            'unique': 'この部署名はすでに存在します。別の名前を入力してください。',
+        }
+    )
 
     def __str__(self):
         return self.name

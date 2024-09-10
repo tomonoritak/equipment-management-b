@@ -69,9 +69,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'equipment-management-b',
+        'NAME': 'equipment_management_local',
         'USER': 'postgres',
-        'PASSWORD':'    ', #ご自身の設定したパスワードを設定しましょう
+        'PASSWORD':'yhmk271098', #ご自身の設定したパスワードを設定しましょう
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -126,3 +126,4 @@ LOGOUT_REDIRECT_URL = '/'
 
 SESSION_COOKIE_AGE = 60*60  # セッションの有効期限を5分に設定
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # ブラウザを閉じたときにセッションを破棄
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'

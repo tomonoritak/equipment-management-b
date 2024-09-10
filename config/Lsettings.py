@@ -71,7 +71,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'equipment-management-b',
         'USER': 'postgres',
-        'PASSWORD': '    ', #ご自身の設定したパスワードを設定しましょう
+        'PASSWORD':'    ', #ご自身の設定したパスワードを設定しましょう
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -114,9 +114,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGOUT_REDIRECT_URL = '/'
 
+SESSION_COOKIE_AGE = 60*60  # セッションの有効期限を5分に設定
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # ブラウザを閉じたときにセッションを破棄

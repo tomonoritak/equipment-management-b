@@ -17,7 +17,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'mysite-91sh.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'https://mysite-bzk3.onrender.com']
 
 
 # Application definition
@@ -121,4 +121,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # //本番環境//
 STATIC_ROOT = str(BASE_DIR / "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+SESSION_COOKIE_AGE = 5 * 60  # セッションの有効期限を5分に設定
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # ブラウザを閉じたときにセッションを破棄
 

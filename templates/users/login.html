@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-    <title>備品管理システム</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,6 +16,7 @@
             align-items: flex-start;
             height: calc(100vh - 40px);
         }
+        
         .box {
             background-color: white;
             padding: 20px;
@@ -46,7 +46,7 @@
 
         .login-row {
             display: flex;
-            justify-content: center; /* 中央寄せ */
+            justify-content: center;
             align-items: center;
             margin-bottom: 15px;
         }
@@ -75,7 +75,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
-            margin: 20px auto 0 auto; /* 上部余白追加と中央寄せ */
+            margin: 20px auto 0 auto;
         }
 
         .login-container button:hover {
@@ -100,33 +100,35 @@
             color: red;
             font-size: 14px;
             margin-top: 5px;
-            text-align: left; /* 左寄せ */
-            width: 100%; /* ボックス内の幅に合わせる */
-            box-sizing: border-box; /* パディングを含めて幅を調整 */
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
         }
         
     </style>
-    <body>
-        <div class="container">
-            <div class="box">
-                <h1>ログイン</h1>
-                <form method="POST" class="login-container">
-                    {% csrf_token %}
-                    {{ form.non_field_errors }}
-                    <div class="login-row">
-                        <label for="{{ form.username.id_for_label }}">ユーザー名:</label>
-                        {{ form.username }}
-                        {{ form.username.errors }}
-                    </div>
-                    <div class="login-row">
-                        <label for="{{ form.password.id_for_label }}">パスワード:</label>
-                        {{ form.password }}
-                        {{ form.password.errors }}
-                    </div>
-                    <button type="submit">ログイン</button>
-                </form>
-                <p>アカウントをお持ちでないですか？<a href="{% url 'users:sign_up' %}">登録はこちら。</a></p>
-            </div>
+    <title>ログイン - 備品管理システム</title>
+    <div class="container">
+        <div class="box">
+            <h1>ログイン</h1>
+            <form method="POST" class="login-container">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="login-row">
+                    <label for="{{ form.username.id_for_label }}">ユーザー名:</label>
+                    {{ form.username }}
+                    {{ form.username.errors }}
+                </div>
+                <div class="login-row">
+                    <label for="{{ form.password.id_for_label }}">パスワード:</label>
+                    {{ form.password }}
+                    {{ form.password.errors }}
+                </div>
+                <button type="submit">ログイン</button>
+            </form>
+            <p>アカウントをお持ちでないですか？<a href="{% url 'users:sign_up' %}">登録はこちら。</a></p>
+            <p>パスワードを忘れた方はこちら: <a href="{% url 'users:password_reset' %}">パスワードリセット</a></p>
         </div>
-    </body>
-    {% endblock content %}
+    </div>
+{% endblock content %}
+
+

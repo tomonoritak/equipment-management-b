@@ -12,21 +12,19 @@
     }
 
     .container {
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 40px);
-        width: 80%;
+        width: 90%;
         max-width: 1200px;
-        margin: 10px auto;
-        overflow-y: auto;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        box-sizing: border-box;
     }
 
     .box {
-        background-color: white;
-        padding: 20px;
-        margin: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
+        padding: 10px;
+        margin: 10px;
         display: flex;
         flex-direction: column;
     }
@@ -52,7 +50,6 @@
     }
 
     .itemlist div {
-        flex: 1;
         padding: 10px;
         text-align: center;
         font-size: 16px; /* フォントサイズを調整 */
@@ -69,6 +66,7 @@
         height: auto; /* 高さを自動に設定 */
         overflow: hidden;
         transition: background-color 0.3s;
+        font-weight: bold;
     }
 
     .item_row:hover {
@@ -76,7 +74,6 @@
     }
 
     .item_row div {
-        flex: 1;
         padding: 10px;
         text-align: center;
         font-size: 16px; /* フォントサイズを調整 */
@@ -95,21 +92,24 @@
         text-decoration: underline;
     }
 
+    .item-time, .item-name, .item-user , .item-status{
+        flex: 1; /* 他のカラムと同じくらいの幅 */
+    }
+    
+    .item-quantity, .item-price {
+        flex: 0.5; /* 在庫数とステータスのカラムの幅を狭く */
+    }
+    
+    .item-department {
+        flex: 2; /* 使用部署の幅を広く */
+    }
+
     ul {
         list-style-type: none;
         padding-left: 0;
         margin: 0;
         height: calc(100vh - 500px); /* 高さを設定してスクロールを可能にする */
         overflow-y: auto; /* 垂直スクロールを有効にする */
-    }
-
-    /* 使用部署の列 */
-    .item-department {
-        flex: 1;
-        padding: 10px;
-        text-align: center;
-        font-size: 16px;
-        color: #444;
     }
 
 </style>
@@ -120,6 +120,7 @@
         <div class="itemlist">
             <div class="item-time">変更日時</div>
             <div class="item-name">備品名</div>
+            <div class="item-price">金額</div>
             <div class="item-quantity">在庫数</div>
             <div class="item-status">ステータス</div>
             <div class="item-department">使用部署</div>
@@ -133,6 +134,7 @@
                         <div class="item-name">
                             <a href="{% url 'Posts:itemdetail' pk=history.post.id %}">{{ history.post.name }}</a>
                         </div>
+                        <div class="item-price">{{ history.post.price }}</div>
                         <div class="item-quantity">{{ history.stock_quantity }}</div>
                         <div class="item-status">
                             {% if history.post.status == "承認" %}
@@ -141,7 +143,7 @@
                                 <span style="color: red;">{{ history.post.status }}</span>
                             {% endif %}
                         </div>
-                        <div class="item-department">{{ history.post.department.name|default:"未指定" }}</div>
+                        <div class="item-department">{{ history.department.name|default:"未指定" }}</div>
                         <div class="item-user">{{ history.user.username }}</div>
                     </div>
                 </li>

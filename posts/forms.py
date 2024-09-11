@@ -29,10 +29,22 @@ class PostForm(forms.ModelForm):
         widget=forms.Select(attrs={'placeholder': 'カテゴリを選択'})
     )
 
+    catalog_number_or_link = forms.CharField(
+        label='カタログ番号orリンク',
+        widget=forms.TextInput(attrs={'placeholder': 'カタログ番号またはURL'}),
+        required=False
+    )
+    price = forms.DecimalField(
+        label='金額',
+        max_digits=10,
+        required=False,
+        widget=forms.NumberInput(attrs={'placeholder': '価格を入力'})
+    )
+
     #fieldsとlabelsにdepartmentを追加
     class Meta:
         model = Posts
-        fields = ['name', 'category', 'location', 'description', 'image', 'stock_quantity', 'status', 'user', 'department']
+        fields = ['name', 'category', 'location', 'catalog_number_or_link', 'price', 'image', 'stock_quantity', 'status', 'user', 'department']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Enter name'}),
             'category': forms.TextInput(attrs={'placeholder': 'Enter category'}),
@@ -69,9 +81,16 @@ class PostForm(forms.ModelForm):
         self.fields['department'].queryset = Department.objects.order_by('name')
 
 class StockQuantityForm(forms.ModelForm):
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.order_by('name'),  # 部署を名前順に並べ替え
+        required=True,
+        label='発注部署',
+        widget=forms.Select(attrs={'placeholder': '部署を選択してください'})
+    )
+
     class Meta:
         model = Posts
-        fields = ['stock_quantity']
+        fields = ['stock_quantity', 'department']
         widgets = {
             'stock_quantity': forms.NumberInput(attrs={'min': 0}),
         }

@@ -22,7 +22,7 @@ class orderhistoryView(ListView):
     context_object_name = 'orderhistory'
 
     def get_queryset(self):
-        return StockHistory.objects.all().order_by('-changed_at')
+        return StockHistory.objects.select_related('post').all().order_by('-changed_at')
 
 class itemCreateView(CreateView):
     form_class = PostForm
@@ -51,6 +51,11 @@ class itemDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         post = self.get_object()
         context['stock_histories'] = post.stockhistory_set.order_by('-changed_at')[:10]
+
+         # StockQuantityForm を追加して context に渡す
+        if post.status == '承認':
+            context['form'] = StockQuantityForm(instance=post)
+
         return context
 
 class itemeditView(UpdateView):
@@ -72,16 +77,32 @@ class StockQuantityUpdateView(UpdateView):
     template_name = 'posts/itemdetail.html'
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        if self.request.user.is_authenticated:
+            response = super().form_valid(form)
         
-        new_stock_quantity = form.cleaned_data['stock_quantity']
-        StockHistory.objects.create(
-            post=self.object,
-            stock_quantity=new_stock_quantity,
-            user=self.request.user  # ★ユーザー情報を追加
-        )
+            new_stock_quantity = form.cleaned_data['stock_quantity']
+            department = form.cleaned_data['department']
+            # 最新の部署情報を取得する
+            post = self.object
+            latest_department = post.department
+            # 在庫履歴に記録する処理
+            StockHistory.objects.create(
+                post=self.object,
+                stock_quantity=new_stock_quantity,
+                user=self.request.user,  # ★ユーザー情報を追加
+                department=latest_department  # 追加された部署情報
+            )
         
-        return response
+            return response
+        else:
+            messages.error(self.request, "ログインしていません。")
+            return redirect('Posts:itemlist')  # ログインページのURLを指定
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.object
+        context['stock_histories'] = post.stockhistory_set.order_by('-changed_at')[:10]
+        return context
 
     def get_success_url(self):
         return reverse_lazy('Posts:itemdetail', kwargs={'pk': self.object.pk})

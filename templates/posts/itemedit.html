@@ -157,9 +157,9 @@
             {{ form.image }}
         </div>
         
-        <!-- 在庫数表示フィールド（変更不可） -->
+        <!-- 発注数表示フィールド（変更不可） -->
         <div class="form-group">
-            <label for="{{ form.stock_quantity.id_for_label }}">在庫数:</label>
+            <label for="{{ form.stock_quantity.id_for_label }}">発注数:</label>
             <input type="text" id="{{ form.stock_quantity.id_for_label }}" name="{{ form.stock_quantity.html_name }}" value="{{ form.stock_quantity.value }}" readonly>
         </div>
   

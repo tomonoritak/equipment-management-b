@@ -15,6 +15,10 @@ class itemlistView(ListView):
     model = Posts
     template_name = 'posts/itemlist.html'
     context_object_name = 'itemlist'
+class approvalView(ListView):
+    model = Posts
+    template_name = 'posts/approval_screen.html'
+    context_object_name = 'approval'
 
 class orderhistoryView(ListView):
     model = StockHistory

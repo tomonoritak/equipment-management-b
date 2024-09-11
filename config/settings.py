@@ -71,7 +71,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'equipment-management-b',
         'USER': 'postgres',
-        'PASSWORD':'   ', #ご自身の設定したパスワードを設定しましょう
+        'PASSWORD':'    ', #ご自身の設定したパスワードを設定しましょう
         'HOST': 'localhost',
         'PORT': '5432',
     }

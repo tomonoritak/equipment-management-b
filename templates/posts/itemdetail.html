@@ -219,7 +219,7 @@
             {% endif %}
         {% endif %}
     </p>
-    <p>金額： {{ post.price }}</p>
+    <p>金額： {{ post.price|floatformat:0  }}</p>
     <p>カテゴリ: {{ post.category }}</p>
     <p>
         ステータス: 
@@ -230,21 +230,21 @@
         {% endif %}
     </p>
     <p>設置場所: {{ post.location }}</p>
-    <p>在庫数: {{ post.stock_quantity }}</p>
+    <!-- <p>発注数: {{ post.stock_quantity }}</p> -->
 
     {% if post.status == '承認' %}
-        <h2>在庫数を変更</h2>
+        <h2>発注内容入力</h2>
         <form method="post" action="{% url 'Posts:stock_quantity_update' post.pk %}">
             {% csrf_token %}
             <div class="form-group">
-                <label for="{{ form.stock_quantity.id_for_label }}">新しい在庫数:</label>
+                <label for="{{ form.stock_quantity.id_for_label }}">新しい発注数:</label>
                 {{ form.stock_quantity }}
             </div>
             <div class="form-group">
                 <label for="{{ form.department.id_for_label }}">発注部署:</label>
                 {{ form.department }}
             </div>
-            <button type="submit" class="btn">更新</button>
+            <button type="submit" class="btn">発注</button>
         </form>
     {% endif %}
 
@@ -276,12 +276,12 @@
             </div>
 
             <div class="history">
-                <h2>在庫数の変更履歴</h2>
+                <h2>発注数の変更履歴</h2>
                 <ul>
                     {% for history in stock_histories %}
                         <li>
                             <div class="item-info">
-                                {{ history.changed_at|date:"Y/m/d H:i" }}: 在庫数 {{ history.stock_quantity }}
+                                {{ history.changed_at|date:"Y/m/d H:i" }}: 発注数 {{ history.stock_quantity }}
                             </div>
                             <div class="department-info">
                                 {{ history.department }}

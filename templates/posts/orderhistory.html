@@ -47,6 +47,7 @@
         padding: 10px 0;
         box-sizing: border-box;
         height: auto; /* 高さを自動に設定 */
+        cursor: pointer; /* カーソルをポインターに変更 */
     }
 
     .itemlist div {
@@ -92,14 +93,14 @@
         text-decoration: underline;
     }
 
-    .item-time, .item-name, .item-user , .item-status{
+    .item-time, .item-name, .item-user , .item-status {
         flex: 1; /* 他のカラムと同じくらいの幅 */
     }
-    
+
     .item-quantity, .item-price {
-        flex: 0.5; /* 在庫数とステータスのカラムの幅を狭く */
+        flex: 0.5; /* 発注数と金額のカラムの幅を狭く */
     }
-    
+
     .item-department {
         flex: 2; /* 使用部署の幅を広く */
     }
@@ -111,22 +112,21 @@
         height: calc(100vh - 500px); /* 高さを設定してスクロールを可能にする */
         overflow-y: auto; /* 垂直スクロールを有効にする */
     }
-
 </style>
 
 <div class="container">
     <div class="box">
         <h1>発注履歴</h1>
         <div class="itemlist">
-            <div class="item-time">変更日時</div>
-            <div class="item-name">備品名</div>
-            <div class="item-price">金額</div>
-            <div class="item-quantity">在庫数</div>
-            <div class="item-status">ステータス</div>
-            <div class="item-department">使用部署</div>
-            <div class="item-user">ユーザー</div>
+            <div class="item-time" id="time-header">変更日時</div>
+            <div class="item-name" id="name-header">備品名</div>
+            <div class="item-price" id="price-header">金額</div>
+            <div class="item-quantity" id="quantity-header">発注数</div>
+            <div class="item-status" id="status-header">ステータス</div>
+            <div class="item-department" id="department-header">使用部署</div>
+            <div class="item-user" id="user-header">ユーザー</div>
         </div>
-        <ul>
+        <ul id="item-list">
             {% for history in orderhistory %}
                 <li>
                     <div class="item_row">
@@ -134,7 +134,7 @@
                         <div class="item-name">
                             <a href="{% url 'Posts:itemdetail' pk=history.post.id %}">{{ history.post.name }}</a>
                         </div>
-                        <div class="item-price">{{ history.post.price }}</div>
+                        <div class="item-price">{{ history.post.price|floatformat:0 }}</div>
                         <div class="item-quantity">{{ history.stock_quantity }}</div>
                         <div class="item-status">
                             {% if history.post.status == "承認" %}
@@ -153,5 +153,47 @@
         </ul>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('item-list'); // ul を選択
+        const headers = {
+            'time-header': 0,
+            'name-header': 1,
+            'price-header': 2,
+            'quantity-header': 3,
+            'status-header': 4,
+            'department-header': 5,
+            'user-header': 6
+        };
+        let sortDirection = true; // true は昇順、false は降順
+
+        function sortTable(columnIndex) {
+            const items = Array.from(table.querySelectorAll('li'));
+            items.sort((a, b) => {
+                const aText = a.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
+                const bText = b.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
+                
+                if (columnIndex === 2) { // 金額の場合は数値として比較
+                    return (parseFloat(aText.replace(/[^0-9.-]/g, '')) - parseFloat(bText.replace(/[^0-9.-]/g, ''))) * (sortDirection ? 1 : -1);
+                } else if (columnIndex === 3) { // 発注数の場合は数値として比較
+                    return (parseInt(aText, 10) - parseInt(bText, 10)) * (sortDirection ? 1 : -1);
+                } else { // それ以外のテキスト比較
+                    return (aText.localeCompare(bText)) * (sortDirection ? 1 : -1);
+                }
+            });
+            items.forEach(item => table.appendChild(item));
+            sortDirection = !sortDirection; // 並び替えの方向をトグル
+        }
+
+        document.getElementById('time-header').addEventListener('click', () => sortTable(headers['time-header']));
+        document.getElementById('name-header').addEventListener('click', () => sortTable(headers['name-header']));
+        document.getElementById('price-header').addEventListener('click', () => sortTable(headers['price-header']));
+        document.getElementById('quantity-header').addEventListener('click', () => sortTable(headers['quantity-header']));
+        document.getElementById('status-header').addEventListener('click', () => sortTable(headers['status-header']));
+        document.getElementById('department-header').addEventListener('click', () => sortTable(headers['department-header']));
+        document.getElementById('user-header').addEventListener('click', () => sortTable(headers['user-header']));
+    });
+</script>
 
 {% endblock content %}

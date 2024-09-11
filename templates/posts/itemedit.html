@@ -10,7 +10,7 @@
     }
   
     .container {
-        width: 80%;
+        width: 90%;
         max-width: 1200px;
         margin: 50px auto;
         background-color: #fff;
@@ -139,10 +139,16 @@
             {{ form.location }}
         </div>
         
-        <!-- 説明入力フィールド -->
+        <!-- カタログ番号入力フィールド -->
         <div class="form-group">
-            <label for="{{ form.description.id_for_label }}">説明:</label>
-            {{ form.description }}
+            <label for="{{ form.catalog_number_or_link.id_for_label }}">カタログ番号orリンク:</label>
+            {{ form.catalog_number_or_link }}
+        </div>
+
+        <!-- 金額入力フィールド -->
+        <div class="form-group">
+            <label for="{{ form.price.id_for_label }}">金額:</label>
+            {{ form.price }}
         </div>
         
         <!-- 画像アップロードフィールド -->

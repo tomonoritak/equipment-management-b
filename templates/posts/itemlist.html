@@ -12,7 +12,7 @@
     }
 
     .container {
-        width: 80%;
+        width: 90%;
         max-width: 1200px;
         margin: 50px auto;
         background-color: #fff;
@@ -71,6 +71,14 @@
         text-decoration: underline;
     }
 
+    .item-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        max-width: 100%; /* 必要に応じて最大幅を設定 */
+    }
+
     .additem-button {
         display: inline-block;
         padding: 12px 24px;
@@ -104,6 +112,82 @@
         height: calc(100vh - 500px); /* 高さを設定してスクロールを可能にする */
         overflow-y: auto; /* 垂直スクロールを有効にする */
             }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; /* ツールチップの位置 */
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; /* ツールチップの位置 */
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
 </style>
 
 <div class="container">
@@ -125,7 +209,7 @@
                 <li>
                     <div class="item_row">
                         <div class="item-name">
-                            <a href="{% url 'Posts:itemdetail' post.id %}">{{ post.name }}</a>
+                            <a href="{% url 'Posts:itemdetail' post.id %}" title="{{ post.name }}">{{ post.name }}</a>
                         </div>
                         <div class="item-category">{{ post.category }}</div>
                         <div class="item-place">{{ post.location }}</div>

@@ -23,7 +23,8 @@ class Posts(models.Model):
     category = models.CharField(max_length=50)  # カテゴリーカラム
     created_at = models.DateTimeField(auto_now_add=True)  # 作成日時
     location = models.CharField(max_length=100)  # 設置場所カラム
-    description = models.TextField()  # 説明カラム
+    catalog_number_or_link = models.CharField(max_length=255, blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)  # 画像カラム（任意）
     stock_quantity = models.PositiveIntegerField()  # 在庫数カラム
     status = models.CharField(max_length=20, default='未承諾')  # デフォルト値を設定
@@ -39,3 +40,4 @@ class StockHistory(models.Model):
     stock_quantity = models.PositiveIntegerField()
     changed_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)  # ★ユーザー情報を追加
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)  # 追加フィールド

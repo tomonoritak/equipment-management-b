@@ -41,7 +41,8 @@ class itemCreateView(CreateView):
         StockHistory.objects.create(
             post=post,
             stock_quantity=post.stock_quantity,
-            user=self.request.user  # ★ユーザー情報を追加
+            user=self.request.user,  # ★ユーザー情報を追加
+            department=post.department  # 追加: 使用部署を保存
         )
 
         return super().form_valid(form)
@@ -85,22 +86,20 @@ class StockQuantityUpdateView(UpdateView):
             response = super().form_valid(form)
         
             new_stock_quantity = form.cleaned_data['stock_quantity']
-            department = form.cleaned_data['department']
-            # 最新の部署情報を取得する
-            post = self.object
-            latest_department = post.department
+            department = form.cleaned_data['department']  # 修正: フォームから取得
+
             # 在庫履歴に記録する処理
             StockHistory.objects.create(
                 post=self.object,
                 stock_quantity=new_stock_quantity,
-                user=self.request.user,  # ★ユーザー情報を追加
-                department=latest_department  # 追加された部署情報
+                user=self.request.user,
+                department=department  # 修正: フォームのデータを保存
             )
         
             return response
         else:
             messages.error(self.request, "ログインしていません。")
-            return redirect('Posts:itemlist')  # ログインページのURLを指定
+            return redirect('Posts:itemlist')  # 任意のURLを指定
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

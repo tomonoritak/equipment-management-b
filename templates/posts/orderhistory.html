@@ -77,7 +77,7 @@
     .item_row div {
         padding: 10px;
         text-align: center;
-        font-size: 16px; /* フォントサイズを調整 */
+        font-size: 14px; /* フォントサイズを調整 */
         box-sizing: border-box;
         overflow: hidden;
     }
@@ -93,7 +93,7 @@
         text-decoration: underline;
     }
 
-    .item-time, .item-name, .item-user , .item-status {
+    .item-name, .item-user , .item-status {
         flex: 1; /* 他のカラムと同じくらいの幅 */
     }
 
@@ -101,8 +101,8 @@
         flex: 0.5; /* 発注数と金額のカラムの幅を狭く */
     }
 
-    .item-department {
-        flex: 2; /* 使用部署の幅を広く */
+    .item-time, .item-department {
+        flex: 1.5; /* 使用部署の幅を広く */
     }
 
     ul {
@@ -112,19 +112,74 @@
         height: calc(100vh - 500px); /* 高さを設定してスクロールを可能にする */
         overflow-y: auto; /* 垂直スクロールを有効にする */
     }
+
+    .item-name {
+        white-space: nowrap; /* テキストを折り返さない */
+        overflow: hidden; /* はみ出た部分は隠す */
+        text-overflow: ellipsis; /* はみ出た部分に省略記号を表示する */
+    }
+    
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; /* ツールチップの位置 */
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .sort-icon {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 12px;
+        vertical-align: middle;
+        color: #007bff;
+    }
+    
+    .sort-asc::before {
+        content: "▲"; /* 上向き矢印 */
+    }
+    
+    .sort-desc::before {
+        content: "▼"; /* 下向き矢印 */
+    }
 </style>
 
 <div class="container">
     <div class="box">
         <h1>発注履歴</h1>
         <div class="itemlist">
-            <div class="item-time" id="time-header">変更日時</div>
-            <div class="item-name" id="name-header">備品名</div>
-            <div class="item-price" id="price-header">金額</div>
-            <div class="item-quantity" id="quantity-header">発注数</div>
-            <div class="item-status" id="status-header">ステータス</div>
-            <div class="item-department" id="department-header">使用部署</div>
-            <div class="item-user" id="user-header">ユーザー</div>
+            <div class="item-time" id="time-header">変更日時<span class="sort-icon"></span></div>
+            <div class="item-name" id="name-header">備品名<span class="sort-icon"></span></div>
+            <div class="item-price" id="price-header">金額<span class="sort-icon"></span></div>
+            <div class="item-quantity" id="quantity-header">発注数<span class="sort-icon"></span></div>
+            <div class="item-status" id="status-header">ステータス<span class="sort-icon"></span></div>
+            <div class="item-department" id="department-header">使用部署<span class="sort-icon"></span></div>
+            <div class="item-user" id="user-header">ユーザー<span class="sort-icon"></span></div>
         </div>
         <ul id="item-list">
             {% for history in orderhistory %}
@@ -132,7 +187,7 @@
                     <div class="item_row">
                         <div class="item-time">{{ history.changed_at|date:"Y/m/d H:i" }}</div>
                         <div class="item-name">
-                            <a href="{% url 'Posts:itemdetail' pk=history.post.id %}">{{ history.post.name }}</a>
+                            <a href="{% url 'Posts:itemdetail' pk=history.post.id %}" title="{{ history.post.name }}">{{ history.post.name }}</a>
                         </div>
                         <div class="item-price">{{ history.post.price|floatformat:0 }}</div>
                         <div class="item-quantity">{{ history.stock_quantity }}</div>
@@ -167,6 +222,7 @@
             'user-header': 6
         };
         let sortDirection = true; // true は昇順、false は降順
+        let currentSortIndex = null;
 
         function sortTable(columnIndex) {
             const items = Array.from(table.querySelectorAll('li'));
@@ -174,16 +230,30 @@
                 const aText = a.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
                 const bText = b.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
                 
-                if (columnIndex === 2) { // 金額の場合は数値として比較
-                    return (parseFloat(aText.replace(/[^0-9.-]/g, '')) - parseFloat(bText.replace(/[^0-9.-]/g, ''))) * (sortDirection ? 1 : -1);
-                } else if (columnIndex === 3) { // 発注数の場合は数値として比較
-                    return (parseInt(aText, 10) - parseInt(bText, 10)) * (sortDirection ? 1 : -1);
-                } else { // それ以外のテキスト比較
-                    return (aText.localeCompare(bText)) * (sortDirection ? 1 : -1);
+                // 数値の場合は数値として比較
+                if (!isNaN(aText) && !isNaN(bText)) {
+                    return (parseFloat(aText) - parseFloat(bText)) * (sortDirection ? 1 : -1);
                 }
+                return (aText.localeCompare(bText, undefined, { numeric: true })) * (sortDirection ? 1 : -1);
             });
             items.forEach(item => table.appendChild(item));
+  
+            // ソートアイコンの更新
+            updateSortIcons(columnIndex);
+
             sortDirection = !sortDirection; // 並び替えの方向をトグル
+        }
+
+        function updateSortIcons(activeIndex) {
+            Object.keys(headers).forEach(headerId => {
+                const header = document.getElementById(headerId);
+                const icon = header.querySelector('.sort-icon');
+                if (headers[headerId] === activeIndex) {
+                    icon.className = `sort-icon ${sortDirection ? 'sort-asc' : 'sort-desc'}`;
+                } else {
+                    icon.className = 'sort-icon';
+                }
+            });
         }
 
         document.getElementById('time-header').addEventListener('click', () => sortTable(headers['time-header']));
@@ -193,6 +263,9 @@
         document.getElementById('status-header').addEventListener('click', () => sortTable(headers['status-header']));
         document.getElementById('department-header').addEventListener('click', () => sortTable(headers['department-header']));
         document.getElementById('user-header').addEventListener('click', () => sortTable(headers['user-header']));
+
+        // 初期状態でアイコンを設定
+        updateSortIcons(currentSortIndex);
     });
 </script>
 

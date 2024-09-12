@@ -42,14 +42,9 @@
   }
 
   .itemlist div, .item_row div {
-      flex: 1;
       padding: 10px;
       text-align: center;
       font-size: 14px; /* 各項目のフォントサイズを指定 */
-  }
-
-  .itemlist div:first-child, .item_row div:first-child {
-      flex: 2;
   }
 
   .item_row {
@@ -72,12 +67,17 @@
       text-decoration: underline;
   }
 
-  .item-name {
+  .item-name , .item-department{
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       display: inline-block;
       max-width: 100%; /* 必要に応じて最大幅を設定 */
+      flex: 2;
+  }
+
+  .item-category , .item-place , .item-price{
+      flex: 1;
   }
 
   .additem-button {
@@ -151,6 +151,22 @@
       visibility: visible;
       opacity: 1;
   }
+
+  .sort-icon {
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 12px;
+    vertical-align: middle;
+    color: #007bff;
+  }
+
+  .sort-asc::before {
+    content: "▲"; /* 上向き矢印 */
+  }
+
+  .sort-desc::before {
+    content: "▼"; /* 下向き矢印 */
+  }
 </style>
 </head>
 <body>
@@ -159,10 +175,11 @@
       <h1>承認待ち一覧</h1>
       <!-- <a href="{% url 'Posts:itemregistration' %}" class="additem-button">備品を追加</a> -->
       <div class="itemlist">
-          <div class="item-name" id="name-header">名前</div>
-          <div class="item-category" id="category-header">カテゴリ</div>
-          <div class="item-place" id="place-header">設置場所</div>
-          <div class="item-status" id="status-header">ステータス</div>
+          <div class="item-name" id="name-header">名前<span class="sort-icon"></span></div>
+          <div class="item-category" id="category-header">カテゴリ<span class="sort-icon"></span></div>
+          <div class="item-price" id="price-header">金額<span class="sort-icon"></span></div>
+          <div class="item-place" id="place-header">設置場所<span class="sort-icon"></span></div>
+          <div class="item-department" id="department-header">部署<span class="sort-icon"></span></div>
       </div>
       <ul id="item-list">
           {% for post in approval %}
@@ -173,14 +190,9 @@
                           <a href="{% url 'Posts:itemdetail' post.id %}" title="{{ post.name }}">{{ post.name }}</a>
                       </div>
                       <div class="item-category">{{ post.category }}</div>
+                      <div class="item-price">{{ post.price|floatformat:0 }}</div>
                       <div class="item-place">{{ post.location }}</div>
-                      <div class="item-status">
-                          {% if post.status == "承認" %}
-                              <span style="color: green;">{{ post.status }}</span>
-                          {% elif post.status == "承認待ち" %}
-                              <span style="color: red;">{{ post.status }}</span>
-                          {% endif %}
-                      </div>
+                      <div class="item-department">{{ post.department.name|default:"未指定" }}</div>
                   </div>
               </li>
           {% endif %}
@@ -190,31 +202,59 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-      const table = document.getElementById('item-list'); // ul を選択
-      const headers = {
-          'name-header': 0,
-          'category-header': 1,
-          'place-header': 2,
-          'status-header': 3
-      };
-      let sortDirection = true; // true は昇順、false は降順
-
-      function sortTable(columnIndex) {
-          const items = Array.from(table.querySelectorAll('li'));
-          items.sort((a, b) => {
-              const aText = a.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
-              const bText = b.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
-              return (aText.localeCompare(bText, undefined, { numeric: true })) * (sortDirection ? 1 : -1);
-          });
-          items.forEach(item => table.appendChild(item));
-          sortDirection = !sortDirection; // 並び替えの方向をトグル
-      }
-
-      document.getElementById('name-header').addEventListener('click', () => sortTable(headers['name-header']));
-      document.getElementById('category-header').addEventListener('click', () => sortTable(headers['category-header']));
-      document.getElementById('place-header').addEventListener('click', () => sortTable(headers['place-header']));
-      document.getElementById('status-header').addEventListener('click', () => sortTable(headers['status-header']));
-  });
+    document.addEventListener('DOMContentLoaded', function () {
+        const table = document.getElementById('item-list'); // ul を選択
+        const headers = {
+            'name-header': 0,
+            'category-header': 1,
+            'price-header': 2,
+            'place-header': 3,
+            'department-header': 4
+        };
+        let sortDirection = true; // true は昇順、false は降順
+        let currentSortIndex = null;
+  
+        function sortTable(columnIndex) {
+            const items = Array.from(table.querySelectorAll('li'));
+            items.sort((a, b) => {
+                const aText = a.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
+                const bText = b.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
+  
+                // 数値の場合は数値として比較
+                if (!isNaN(aText) && !isNaN(bText)) {
+                    return (parseFloat(aText) - parseFloat(bText)) * (sortDirection ? 1 : -1);
+                }
+                return (aText.localeCompare(bText, undefined, { numeric: true })) * (sortDirection ? 1 : -1);
+            });
+            items.forEach(item => table.appendChild(item));
+  
+            // ソートアイコンの更新
+            updateSortIcons(columnIndex);
+  
+            sortDirection = !sortDirection; // 並び替えの方向をトグル
+        }
+  
+        function updateSortIcons(activeIndex) {
+            Object.keys(headers).forEach(headerId => {
+                const header = document.getElementById(headerId);
+                const icon = header.querySelector('.sort-icon');
+                if (headers[headerId] === activeIndex) {
+                    icon.className = `sort-icon ${sortDirection ? 'sort-asc' : 'sort-desc'}`;
+                } else {
+                    icon.className = 'sort-icon';
+                }
+            });
+        }
+  
+        // ヘッダーがクリックされたときのイベントリスナーを設定
+        document.getElementById('name-header').addEventListener('click', () => sortTable(headers['name-header']));
+        document.getElementById('category-header').addEventListener('click', () => sortTable(headers['category-header']));
+        document.getElementById('price-header').addEventListener('click', () => sortTable(headers['price-header']));
+        document.getElementById('place-header').addEventListener('click', () => sortTable(headers['place-header']));
+        document.getElementById('department-header').addEventListener('click', () => sortTable(headers['department-header']));
+  
+        // 初期状態でアイコンを設定
+        updateSortIcons(currentSortIndex);
+    });
 </script>
 {% endblock content %}

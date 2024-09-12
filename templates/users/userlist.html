@@ -1,67 +1,72 @@
-<!--ユーザー一覧-->
 {% extends "base.html" %}
 {% load static %}
 
-
-
 {% block content %}
 
+<title>ユーザー一覧</title>
 <style>
-
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding: 0;
-}
-    
-
-.container {
-  display: flex;
-  justify-content: center;
-  height: calc(100vh - 40px);
-}
-    .box {
-      background-color: white;
-      padding: 20px;
-      margin: 15px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      height: 50%;
-      width: 95%;
-      display: flex;
-      flex-direction: column;
-      align-items: center; 
-      border-radius: 10px;
-  }
-
-    .box h1 {
-      margin-top: 0;
-      margin-bottom: 20px;
-      text-align: center;
-      font-weight: normal;
-      font-size:20px;
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
     }
 
+    .container {
+        display: flex;
+        justify-content: center;
+        padding: 50px 0; /* 上下のパディングを追加 */
+    }
+
+    .box {
+        background-color: #fff;
+        padding: 30px;
+        margin: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 1200px;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .box h1 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
 
     .userlist-table {
-      width: 100%;
-      border-collapse: collapse;
-  }
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-  .userlist-table th, .userlist-table td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: center;
-  }
+    .userlist-table th, .userlist-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: center;
+    }
 
-  .userlist-table th {
-      background-color: #f5f5f5;
-      font-weight: bold;
-  }
+    .userlist-table th {
+        background-color: #f5f5f5;
+        font-weight: 500;
+    }
 
+    .userlist-table td a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .userlist-table td a:hover {
+        color: #0056b3;
+    }
 </style>
-<body>
-  <div class="container">
+
+<div class="container">
     <div class="box">
         <h1>ユーザー一覧</h1>
         <table class="userlist-table">
@@ -99,8 +104,6 @@
             </tbody>
         </table>
     </div>
-  </div>
-</body>
-
+</div>
 
 {% endblock content %}

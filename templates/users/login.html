@@ -4,8 +4,9 @@
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
             margin: 0;
             padding: 0;
         }
@@ -13,15 +14,14 @@
         .container {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            height: calc(100vh - 40px);
+            align-items: center;
         }
         
         .box {
-            background-color: white;
-            padding: 20px;
+            background-color: #fff;
+            padding: 30px;
             margin: 15px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             width: 95%;
             display: flex;
             flex-direction: column;
@@ -35,8 +35,9 @@
             margin-top: 0;
             margin-bottom: 20px;
             text-align: center;
-            font-weight: normal;
-            font-size:20px;
+            font-weight: 700;
+            font-size: 28px;
+            color: #333;
         }
 
         .login-container {
@@ -46,40 +47,56 @@
 
         .login-row {
             display: flex;
-            justify-content: center;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            text-align: left;
         }
 
         .login-row label {
-            width: 30%;
+            width: 200px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #444;
+            margin-right: 20px;
             text-align: right;
-            margin-right: 10px;
         }
 
         .login-row input {
-            width: 60%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            color: #333;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-row input[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
         }
 
         .login-container button {
             display: block;
             width: auto;
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: #007bff;
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin: 20px auto 0 auto;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
         }
 
         .login-container button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
         .login-container p {
@@ -125,10 +142,8 @@
                 </div>
                 <button type="submit">ログイン</button>
             </form>
-            <p>アカウントをお持ちでないですか？<a href="{% url 'users:sign_up' %}">登録はこちら。</a></p>
+            <p>アカウントをお持ちでないですか？<a href="{% url 'users:sign_up' %}">登録はこちら</a></p>
             <p>パスワードを忘れた方はこちら: <a href="{% url 'users:password_reset' %}">パスワードリセット</a></p>
         </div>
     </div>
 {% endblock content %}
-
-

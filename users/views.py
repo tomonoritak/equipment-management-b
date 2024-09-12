@@ -40,6 +40,15 @@ class UserListView(ListView):
     template_name = 'users/userlist.html'
     context_object_name = 'users'
 
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import UpdateView
+from .forms import UserEditForm  # フォームを適宜インポート
+
 class UserEditView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserEditForm
@@ -64,6 +73,7 @@ class UserEditView(LoginRequiredMixin, UpdateView):
         user_form = UserEditForm(request.POST, instance=self.object)
         password_form = PasswordChangeForm(user=self.object, data=request.POST)
 
+        # パスワード変更処理
         if 'change_password' in request.POST:
             if password_form.is_valid():
                 password_form.save()
@@ -73,13 +83,22 @@ class UserEditView(LoginRequiredMixin, UpdateView):
             else:
                 return self.render_to_response(self.get_context_data(user_form=user_form, password_form=password_form))
 
+        # ユーザー情報の更新処理
         elif 'update_user' in request.POST:
             if user_form.is_valid():
                 user_form.save()
+                messages.success(request, "ユーザー情報を更新しました")
                 return redirect(self.success_url)
             else:
                 return self.render_to_response(self.get_context_data(user_form=user_form, password_form=password_form))
 
+        # ユーザー削除処理
+        elif 'delete_user' in request.POST:
+            self.object.delete()
+            messages.success(request, "ユーザーが削除されました")
+            return redirect(self.success_url)
+
+        # その他の場合（エラーハンドリング）
         return self.render_to_response(self.get_context_data(user_form=user_form, password_form=password_form))
 
     def form_valid(self, form):
@@ -87,6 +106,7 @@ class UserEditView(LoginRequiredMixin, UpdateView):
             self.object.delete()
             return redirect(self.success_url)
         return super().form_valid(form)
+
 
 class CustomPasswordResetView(View):
     template_name = 'users/password_reset.html'

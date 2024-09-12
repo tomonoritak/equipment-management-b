@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView, DetailView, UpdateView,DeleteView
 from django.urls import reverse_lazy, reverse
-from .models import Posts, StockHistory
+from .models import Posts, StockHistory ,Department
 from .forms import PostForm, StockQuantityForm ,DepartmentForm
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
@@ -15,6 +15,10 @@ class itemlistView(ListView):
     model = Posts
     template_name = 'posts/itemlist.html'
     context_object_name = 'itemlist'
+class approvalView(ListView):
+    model = Posts
+    template_name = 'posts/approval_screen.html'
+    context_object_name = 'approval'
 
 class orderhistoryView(ListView):
     model = StockHistory
@@ -22,7 +26,7 @@ class orderhistoryView(ListView):
     context_object_name = 'orderhistory'
 
     def get_queryset(self):
-        return StockHistory.objects.all().order_by('-changed_at')
+        return StockHistory.objects.select_related('post').all().order_by('-changed_at')
 
 class itemCreateView(CreateView):
     form_class = PostForm
@@ -37,7 +41,8 @@ class itemCreateView(CreateView):
         StockHistory.objects.create(
             post=post,
             stock_quantity=post.stock_quantity,
-            user=self.request.user  # ★ユーザー情報を追加
+            user=self.request.user,  # ★ユーザー情報を追加
+            department=post.department  # 追加: 使用部署を保存
         )
 
         return super().form_valid(form)
@@ -51,6 +56,11 @@ class itemDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         post = self.get_object()
         context['stock_histories'] = post.stockhistory_set.order_by('-changed_at')[:10]
+
+         # StockQuantityForm を追加して context に渡す
+        if post.status == '承認':
+            context['form'] = StockQuantityForm(instance=post)
+
         return context
 
 class itemeditView(UpdateView):
@@ -72,16 +82,30 @@ class StockQuantityUpdateView(UpdateView):
     template_name = 'posts/itemdetail.html'
 
     def form_valid(self, form):
-        response = super().form_valid(form)
+        if self.request.user.is_authenticated:
+            response = super().form_valid(form)
         
-        new_stock_quantity = form.cleaned_data['stock_quantity']
-        StockHistory.objects.create(
-            post=self.object,
-            stock_quantity=new_stock_quantity,
-            user=self.request.user  # ★ユーザー情報を追加
-        )
+            new_stock_quantity = form.cleaned_data['stock_quantity']
+            department = form.cleaned_data['department']  # 修正: フォームから取得
+
+            # 在庫履歴に記録する処理
+            StockHistory.objects.create(
+                post=self.object,
+                stock_quantity=new_stock_quantity,
+                user=self.request.user,
+                department=department  # 修正: フォームのデータを保存
+            )
         
-        return response
+            return response
+        else:
+            messages.error(self.request, "ログインしていません。")
+            return redirect('Posts:itemlist')  # 任意のURLを指定
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.object
+        context['stock_histories'] = post.stockhistory_set.order_by('-changed_at')[:10]
+        return context
 
     def get_success_url(self):
         return reverse_lazy('Posts:itemdetail', kwargs={'pk': self.object.pk})
@@ -107,7 +131,13 @@ def add_department(request):
         form = DepartmentForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("Posts:itemlist")  # 成功後のリダイレクト先
+            return redirect("Posts:department_add")  # 成功後のリダイレクト先
     else:
         form = DepartmentForm()
-    return render(request, 'posts/add_department.html', {'form': form})
+    departments = Department.objects.all().order_by('name')  # 部署を名前順に取得
+
+    context = {
+        'form': form,
+        'departments': departments,
+    }
+    return render(request, 'posts/add_department.html', context)

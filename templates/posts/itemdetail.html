@@ -11,7 +11,7 @@
     }
 
     .container {
-        width: 80%;
+        width: 90%;
         min-width: 500px;
         max-width: 1200px;
         margin: 50px auto;
@@ -154,22 +154,52 @@
         text-align: left;
     }
 
-    .history {
-        text-align: left;
-    }
-
     .centered-container {
         display: flex;
         justify-content: center;
     }
 
     .centered-content {
-    width: 100%;
-    max-width: 900px;
-    display: flex;
-    justify-content: center;
-    gap: 10px; /* コンテンツ間のスペースを10pxに設定 */
-}
+        width: 100%;
+        max-width: 900px;
+        display: flex;
+        justify-content: center;
+        gap: 30px; /* コンテンツ間のスペースを10pxに設定 */
+    }
+
+    .history {
+        margin-top: 30px;
+        text-align: left;
+        border-top: 1px solid #ddd;
+        padding-top: 20px;
+        width: 70%; /* 親コンテナに合わせて幅を100%に設定 */
+        max-width: 1000px; /* 最大幅を設定 */
+        box-sizing: border-box; /* パディングを含めた幅計算 */
+        text-align: center; /* コンテンツを中央寄せ */
+    }
+
+    .history ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .history li {
+        display: flex;
+        justify-content: space-between; /* 横並びに配置し、スペースを均等に */
+        margin-bottom: 10px;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .history .item-info {
+        flex: 1;
+    }
+    
+    .history .department-info {
+        flex: 1;
+        text-align: right; /* 右寄せにする */
+    }
 </style>
 
 <div class="container">
@@ -180,7 +210,16 @@
     {% if post.image %}
         <img src="{{ post.image.url }}" alt="{{ post.name }}" style="margin: 20px auto;">
     {% endif %}
-    <p>説明: {{ post.description }}</p>
+    <p>カタログ番号orリンク: 
+        {% if post.catalog_number_or_link %}
+            {% if post.catalog_number_or_link|slice:"7:" == "http://" or post.catalog_number_or_link|slice:"8:" == "https://" %}
+                <a href="{{ post.catalog_number_or_link }}" target="_blank" rel="noopener noreferrer">{{ post.catalog_number_or_link }}</a>
+            {% else %}
+                {{ post.catalog_number_or_link }}
+            {% endif %}
+        {% endif %}
+    </p>
+    <p>金額： {{ post.price|floatformat:0  }}</p>
     <p>カテゴリ: {{ post.category }}</p>
     <p>
         ステータス: 
@@ -191,17 +230,21 @@
         {% endif %}
     </p>
     <p>設置場所: {{ post.location }}</p>
-    <p>在庫数: {{ post.stock_quantity }}</p>
+    <!-- <p>発注数: {{ post.stock_quantity }}</p> -->
 
     {% if post.status == '承認' %}
-        <h2>在庫数を変更</h2>
+        <h2>発注内容入力</h2>
         <form method="post" action="{% url 'Posts:stock_quantity_update' post.pk %}">
             {% csrf_token %}
             <div class="form-group">
-                <label for="id_stock_quantity">新しい在庫数:</label>
-                <input type="number" id="id_stock_quantity" name="stock_quantity" value="{{ post.stock_quantity }}" min="0" required>
-                <button type="submit" class="btn">更新</button>
+                <label for="{{ form.stock_quantity.id_for_label }}">新しい発注数:</label>
+                {{ form.stock_quantity }}
             </div>
+            <div class="form-group">
+                <label for="{{ form.department.id_for_label }}">発注部署:</label>
+                {{ form.department }}
+            </div>
+            <button type="submit" class="btn">発注</button>
         </form>
     {% endif %}
 
@@ -233,10 +276,17 @@
             </div>
 
             <div class="history">
-                <h2>在庫数の変更履歴</h2>
+                <h2>発注履歴</h2>
                 <ul>
                     {% for history in stock_histories %}
-                        <li>{{ history.changed_at|date:"Y/m/d H:i" }}: 在庫数 {{ history.stock_quantity }}</li>
+                        <li>
+                            <div class="item-info">
+                                {{ history.changed_at|date:"Y/m/d H:i" }}: 発注数 {{ history.stock_quantity }}
+                            </div>
+                            <div class="department-info">
+                                {{ history.department }}
+                            </div>
+                        </li>
                     {% empty %}
                         <li>変更履歴はありません。</li>
                     {% endfor %}

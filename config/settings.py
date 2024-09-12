@@ -124,4 +124,5 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 SESSION_COOKIE_AGE = 5 * 60  # セッションの有効期限を5分に設定
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # ブラウザを閉じたときにセッションを破棄
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 

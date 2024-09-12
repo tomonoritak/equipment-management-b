@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views  # viewsをインポート
-from .views import IndexView, itemCreateView, itemlistView, itemDetailView, itemeditView,orderhistoryView,StockQuantityUpdateView, DeleteView
+from .views import IndexView, itemCreateView, itemlistView, itemDetailView, itemeditView,orderhistoryView,StockQuantityUpdateView, DeleteView,approvalView
 
 app_name = 'Posts'
 urlpatterns = [
@@ -14,4 +14,5 @@ urlpatterns = [
     path('item/<int:pk>/approve/', views.approve_item, name='item_approve'),
     path('itemlist/<int:pk>/delete/', DeleteView.as_view(), name='delete'),  #DeleteViewを追加
     path('add_department/', views.add_department, name='department_add'),  # 所属部署追加用のURL
+    path('approval/', approvalView.as_view(), name='approval'),# 承認画面
     ]

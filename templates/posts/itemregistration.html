@@ -11,7 +11,7 @@
     }
 
     .container {
-        width: 80%;
+        width: 90%;
         max-width: 1200px;
         margin: 50px auto;
         background-color: #fff;
@@ -136,8 +136,22 @@
         </div>
         
         <div class="form-group">
-            <label for="{{ form.description.id_for_label }}">説明:</label>
-            {{ form.description }}
+            <label for="{{ form.catalog_number_or_link.id_for_label }}">カタログ番号orリンク:</label>
+            {{ form.catalog_number_or_link }}
+            <div id="link-preview" style="margin-top: 10px;">
+                {% if form.catalog_number_or_link.value %}
+                    {% if form.catalog_number_or_link.value|slice:"7:" == "http://" or form.catalog_number_or_link.value|slice:"8:" == "https://" %}
+                        <a href="{{ form.catalog_number_or_link.value }}" target="_blank">{{ form.catalog_number_or_link.value }}</a>
+                    {% else %}
+                        {{ form.catalog_number_or_link.value }}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.price.id_for_label }}">金額:</label>
+            {{ form.price }}
         </div>
         
         <div class="form-group">
@@ -154,7 +168,7 @@
         </div>
         
         <div class="form-group">
-            <label for="{{ form.stock_quantity.id_for_label }}">在庫数:</label>
+            <label for="{{ form.stock_quantity.id_for_label }}">発注数:</label>
             {{ form.stock_quantity }}
         </div>
   
@@ -173,7 +187,7 @@
         <div class="form-group">
             <label for="{{ form.department.id_for_label }}">使用部署:</label>
             {{ form.department }}
-          </div>
+        </div>
         
         <div class="btn-group">
             <button type="submit" class="btn">保存</button>

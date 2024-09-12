@@ -3,6 +3,7 @@
 {% block content %}
 
 <style>
+    /* 既存のスタイルはそのまま */
     body {
         font-family: 'Roboto', sans-serif;
         background-color: #f4f4f9;
@@ -12,21 +13,19 @@
     }
 
     .container {
-        display: flex;
-        flex-direction: column;
-        height: calc(100vh - 40px);
-        width: 80%;
+        width: 90%;
         max-width: 1200px;
-        margin: 10px auto;
-        overflow-y: auto;
+        margin: 50px auto;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        box-sizing: border-box;
     }
 
     .box {
-        background-color: white;
-        padding: 20px;
-        margin: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
+        padding: 10px;
+        margin: 10px;
         display: flex;
         flex-direction: column;
     }
@@ -48,27 +47,29 @@
         margin-bottom: 10px;
         padding: 10px 0;
         box-sizing: border-box;
-        height: auto; /* 高さを自動に設定 */
+        height: auto;
+        cursor: pointer;
     }
 
     .itemlist div {
-        flex: 1;
         padding: 10px;
         text-align: center;
-        font-size: 16px; /* フォントサイズを調整 */
-        color: #444; /* 文字色を調整 */
+        font-size: 16px;
+        color: #444;
+        cursor: pointer;
     }
 
     .item_row {
         display: flex;
         justify-content: space-between;
-        flex-wrap: nowrap; /* nowrapに変更 */
+        flex-wrap: nowrap;
         border-bottom: 1px solid #ddd;
         padding: 10px 0;
         box-sizing: border-box;
-        height: auto; /* 高さを自動に設定 */
+        height: auto;
         overflow: hidden;
         transition: background-color 0.3s;
+        font-weight: bold;
     }
 
     .item_row:hover {
@@ -76,10 +77,9 @@
     }
 
     .item_row div {
-        flex: 1;
         padding: 10px;
         text-align: center;
-        font-size: 16px; /* フォントサイズを調整 */
+        font-size: 14px;
         box-sizing: border-box;
         overflow: hidden;
     }
@@ -95,12 +95,46 @@
         text-decoration: underline;
     }
 
+    .item-name, .item-user , .item-status {
+        flex: 1;
+    }
+
+    .item-quantity, .item-price, .item-total {
+        flex: 0.5;
+    }
+
+    .item-time, .item-department {
+        flex: 1.5;
+    }
+
     ul {
         list-style-type: none;
         padding-left: 0;
         margin: 0;
-        height: calc(100vh - 500px); /* 高さを設定してスクロールを可能にする */
-        overflow-y: auto; /* 垂直スクロールを有効にする */
+        height: calc(100vh - 500px);
+        overflow-y: auto;
+    }
+
+    .item-name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sort-icon {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 12px;
+        vertical-align: middle;
+        color: #007bff;
+    }
+
+    .sort-asc::before {
+        content: "▲"; /* 上向き矢印 */
+    }
+    
+    .sort-desc::before {
+        content: "▼"; /* 下向き矢印 */
     }
 </style>
 
@@ -108,21 +142,26 @@
     <div class="box">
         <h1>発注履歴</h1>
         <div class="itemlist">
-            <div class="item-time">変更日時</div>
-            <div class="item-name">備品名</div>
-            <div class="item-quantity">在庫数</div>
-            <div class="item-status">ステータス</div>
-            <div class="item-user">ユーザー</div>
+            <div class="item-time" id="time-header">変更日時<span class="sort-icon"></span></div>
+            <div class="item-name" id="name-header">備品名<span class="sort-icon"></span></div>
+            <div class="item-price" id="price-header">金額<span class="sort-icon"></span></div>
+            <div class="item-quantity" id="quantity-header">発注数<span class="sort-icon"></span></div>
+            <div class="item-total" id="total-header">合計金額<span class="sort-icon"></span></div>
+            <div class="item-status" id="status-header">ステータス<span class="sort-icon"></span></div>
+            <div class="item-department" id="department-header">使用部署<span class="sort-icon"></span></div>
+            <div class="item-user" id="user-header">ユーザー<span class="sort-icon"></span></div>
         </div>
-        <ul>
+        <ul id="item-list">
             {% for history in orderhistory %}
                 <li>
                     <div class="item_row">
                         <div class="item-time">{{ history.changed_at|date:"Y/m/d H:i" }}</div>
                         <div class="item-name">
-                            <a href="{% url 'Posts:itemdetail' pk=history.post.id %}">{{ history.post.name }}</a>
+                            <a href="{% url 'Posts:itemdetail' pk=history.post.id %}" title="{{ history.post.name }}">{{ history.post.name }}</a>
                         </div>
+                        <div class="item-price">{{ history.post.price|floatformat:0 }}</div>
                         <div class="item-quantity">{{ history.stock_quantity }}</div>
+                        <div class="item-total"></div> <!-- 合計金額を表示する場所 -->
                         <div class="item-status">
                             {% if history.post.status == "承認" %}
                                 <span style="color: green;">{{ history.post.status }}</span>
@@ -130,6 +169,7 @@
                                 <span style="color: red;">{{ history.post.status }}</span>
                             {% endif %}
                         </div>
+                        <div class="item-department">{{ history.department.name|default:"未指定" }}</div>
                         <div class="item-user">{{ history.user.username }}</div>
                     </div>
                 </li>
@@ -139,5 +179,81 @@
         </ul>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('.item_row');
+
+        // 各アイテムの合計金額を計算し、表示する
+        rows.forEach(row => {
+            const price = parseFloat(row.querySelector('.item-price').textContent.trim());
+            const quantity = parseInt(row.querySelector('.item-quantity').textContent.trim(), 10);
+            const total = price * quantity;
+
+            // 合計金額を表示
+            row.querySelector('.item-total').textContent = total.toLocaleString() + '円';
+        });
+
+        // ソート機能の実装
+        const table = document.getElementById('item-list');
+        const headers = {
+            'time-header': 0,
+            'name-header': 1,
+            'price-header': 2,
+            'quantity-header': 3,
+            'total-header': 4,
+            'status-header': 5,
+            'department-header': 6,
+            'user-header': 7
+        };
+        let sortDirection = true; // true は昇順、false は降順
+        let currentSortIndex = null;
+
+        function sortTable(columnIndex) {
+            const items = Array.from(table.querySelectorAll('li'));
+            items.sort((a, b) => {
+                const aText = a.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
+                const bText = b.querySelectorAll('.item_row div')[columnIndex].textContent.trim();
+
+                // 数値の場合は数値として比較
+                if (!isNaN(aText) && !isNaN(bText)) {
+                    return (parseFloat(aText) - parseFloat(bText)) * (sortDirection ? 1 : -1);
+                }
+                return (aText.localeCompare(bText, undefined, { numeric: true })) * (sortDirection ? 1 : -1);
+            });
+            items.forEach(item => table.appendChild(item));
+
+            // ソートアイコンの更新
+            updateSortIcons(columnIndex);
+
+            sortDirection = !sortDirection; // 並び替えの方向をトグル
+        }
+
+        function updateSortIcons(activeIndex) {
+            Object.keys(headers).forEach(headerId => {
+                const header = document.getElementById(headerId);
+                const icon = header.querySelector('.sort-icon');
+                if (headers[headerId] === activeIndex) {
+                    icon.className = `sort-icon ${sortDirection ? 'sort-asc' : 'sort-desc'}`;
+                } else {
+                    icon.className = 'sort-icon';
+                }
+            });
+        }
+
+        // 各列ヘッダーにソート機能を追加
+        document.getElementById('time-header').addEventListener('click', () => sortTable(headers['time-header']));
+        document.getElementById('name-header').addEventListener('click', () => sortTable(headers['name-header']));
+        document.getElementById('price-header').addEventListener('click', () => sortTable(headers['price-header']));
+        document.getElementById('quantity-header').addEventListener('click', () => sortTable(headers['quantity-header']));
+        document.getElementById('total-header').addEventListener('click', () => sortTable(headers['total-header']));
+        document.getElementById('status-header').addEventListener('click', () => sortTable(headers['status-header']));
+        document.getElementById('department-header').addEventListener('click', () => sortTable(headers['department-header']));
+        document.getElementById('user-header').addEventListener('click', () => sortTable(headers['user-header']));
+
+        // 初期状態でアイコンを設定
+        updateSortIcons(currentSortIndex);
+    });
+</script>
 
 {% endblock content %}

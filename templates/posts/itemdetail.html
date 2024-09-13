@@ -251,9 +251,9 @@
     <div class="centered-container">
         <div class="centered-content">
             <div class="approval">
-                <h2>承認依頼</h2>
-                {% if user.is_superuser %}
-                    {% if post.status == '承認待ち' %}
+                {% if post.status == '承認待ち' %}
+                    {% if user.is_superuser %}
+                        <h2>承認依頼</h2>
                         <p>追加日時: {{ post.created_at }}</p>
                         <p>
                             ステータス: 
@@ -267,11 +267,7 @@
                             {% csrf_token %}
                             <button type="submit" class="btn">承認</button>
                         </form>
-                    {% else %}
-                        <p>承認されています。</p>
                     {% endif %}
-                {% else %}
-                    <p>管理者ではないため、承認依頼は表示されません。</p>
                 {% endif %}
             </div>
 

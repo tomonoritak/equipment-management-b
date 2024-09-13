@@ -16,7 +16,7 @@ class PostForm(forms.ModelForm):
 
         # department追加
     department = forms.ModelChoiceField(
-        queryset=Department.objects.all(),
+        queryset=Department.objects.filter(is_active=True).order_by('name'),
         required=False,
         label='所属部署',
         widget=forms.Select(attrs={'placeholder': '所属部署を選択'})
@@ -78,11 +78,11 @@ class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # 部署を名前順に並べ替え
-        self.fields['department'].queryset = Department.objects.order_by('name')
+        self.fields['department'].queryset = Department.objects.filter(is_active=True).order_by('name')
 
 class StockQuantityForm(forms.ModelForm):
     department = forms.ModelChoiceField(
-        queryset=Department.objects.order_by('name'),  # 部署を名前順に並べ替え
+        queryset=Department.objects.filter(is_active=True).order_by('name'),  # 部署を名前順に並べ替え
         required=True,
         label='発注部署',
         widget=forms.Select(attrs={'placeholder': '部署を選択してください'})

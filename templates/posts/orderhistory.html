@@ -99,11 +99,15 @@
         flex: 1;
     }
 
-    .item-quantity, .item-price, .item-total {
+    .item-time, .item-total {
+        flex: 0.6;
+    }
+
+    .item-quantity, .item-price {
         flex: 0.5;
     }
 
-    .item-time, .item-department {
+    .item-department {
         flex: 1.5;
     }
 
@@ -155,7 +159,7 @@
             {% for history in orderhistory %}
                 <li>
                     <div class="item_row">
-                        <div class="item-time">{{ history.changed_at|date:"Y/m/d H:i" }}</div>
+                        <div class="item-time">{{ history.changed_at|date:"y/m/d" }}</div>
                         <div class="item-name">
                             <a href="{% url 'Posts:itemdetail' pk=history.post.id %}" title="{{ history.post.name }}">{{ history.post.name }}</a>
                         </div>
@@ -236,7 +240,7 @@
                 if (headers[headerId] === activeIndex) {
                     icon.className = `sort-icon ${sortDirection ? 'sort-asc' : 'sort-desc'}`;
                 } else {
-                    icon.className = 'sort-icon';
+                    icon.className = 'sort-icon sort-asc';
                 }
             });
         }

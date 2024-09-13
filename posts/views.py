@@ -128,13 +128,21 @@ class DeleteView(DeleteView):
 @user_passes_test(lambda u: u.is_superuser)
 def add_department(request):
     if request.method == 'POST':
-        form = DepartmentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("Posts:department_add")  # 成功後のリダイレクト先
+        if 'delete_id' in request.POST:  # 削除リクエストか確認
+            department_id = request.POST.get('delete_id')
+            department = get_object_or_404(Department, id=department_id)
+            department.is_active = False  # 削除せず非アクティブに設定
+            department.save()
+            return redirect("Posts:department_add")
+        else:  # 新規追加の処理
+            form = DepartmentForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect("Posts:department_add")  # 成功後のリダイレクト先
     else:
         form = DepartmentForm()
-    departments = Department.objects.all().order_by('name')  # 部署を名前順に取得
+
+    departments = Department.objects.filter(is_active=True).order_by('name')  # 非アクティブの部署を除外
 
     context = {
         'form': form,

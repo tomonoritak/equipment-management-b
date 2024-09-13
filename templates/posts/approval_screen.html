@@ -190,7 +190,7 @@
                           <a href="{% url 'Posts:itemdetail' post.id %}" title="{{ post.name }}">{{ post.name }}</a>
                       </div>
                       <div class="item-category">{{ post.category }}</div>
-                      <div class="item-price">{{ post.price|floatformat:0 }}</div>
+                      <div class="item-price">{{ post.price|floatformat:0 }}円</div>
                       <div class="item-place">{{ post.location }}</div>
                       <div class="item-department">{{ post.department.name|default:"未指定" }}</div>
                   </div>

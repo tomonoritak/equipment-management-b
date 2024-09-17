@@ -64,11 +64,43 @@
     .userlist-table td a:hover {
         color: #0056b3;
     }
+
+    .search-form {
+        margin-bottom: 20px; /* 検索フォームとテーブルの間に余白を追加 */
+    }
+    
+    .search-form input[type="text"] {
+        padding: 8px;
+        margin-right: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .search-form button {
+        padding: 8px 15px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .search-form button:hover {
+        background-color: #0056b3;
+    }
+
 </style>
 
 <div class="container">
     <div class="box">
         <h1>ユーザー一覧</h1>
+
+        <form method="get" action="{% url 'users:userlist' %}" class="search-form">
+            <input type="text" name="q" placeholder="ユーザー名またはメールアドレスで検索" value="{{ query }}" />
+            <button type="submit">検索</button>
+        </form>
+
         <table class="userlist-table">
             <thead>
                 <tr>

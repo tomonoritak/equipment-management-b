@@ -168,6 +168,39 @@
     .sort-desc::before {
         content: "▼"; /* 下向き矢印 */
     }
+
+    .search-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .search-form {
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    .search-form input[type="text"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+        width: 200px;
+    }
+    
+    .search-form button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .search-form button:hover {
+        background-color: #0056b3;
+    }
 </style>
 
 </head>
@@ -175,6 +208,12 @@
 <div class="container">
     <div class="box">
         <h1>備品一覧</h1>
+
+        <form method="GET" action="{% url 'Posts:itemlist' %}" class="search-form">
+            <input type="text" name="q" placeholder="フリーワード検索" value="{{ request.GET.q }}">
+            <button type="submit">検索</button>
+        </form>
+
         <a href="{% url 'Posts:itemregistration' %}" class="additem-button">備品を追加</a>
         <div class="itemlist">
             <div class="item-name" id="name-header">名前<span class="sort-icon"></div>
@@ -185,19 +224,21 @@
         </div>
         <ul id="item-list">
             {% for post in itemlist %}
-            {% if post.status == "承認" %}
-                <li>
-                    <div class="item_row">
-                        <div class="item-name">
-                            <a href="{% url 'Posts:itemdetail' post.id %}" title="{{ post.name }}">{{ post.name }}</a>
+                {% if post.status == "承認" %}
+                    <li>
+                        <div class="item_row">
+                            <div class="item-name">
+                                <a href="{% url 'Posts:itemdetail' post.id %}" title="{{ post.name }}">{{ post.name }}</a>
+                            </div>
+                            <div class="item-category">{{ post.category }}</div>
+                            <div class="item-place">{{ post.location }}</div>
+                            <div class="item-price">{{ post.price|floatformat:0 }}円</div>
+                            <div class="item-department">{{ post.department }}</div>
                         </div>
-                        <div class="item-category">{{ post.category }}</div>
-                        <div class="item-place">{{ post.location }}</div>
-                        <div class="item-price">{{ post.price|floatformat:0 }}円</div>
-                        <div class="item-department">{{ post.department }}</div>
-                    </div>
-                </li>
-            {% endif %}
+                    </li>
+                {% endif %}
+            {% empty %}
+                <li>検索結果が見つかりませんでした。</li>
             {% endfor %}
         </ul>
     </div>

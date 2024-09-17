@@ -5,6 +5,7 @@ from .models import Posts, StockHistory ,Department
 from .forms import PostForm, StockQuantityForm ,DepartmentForm
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Q
 
 class IndexView(ListView):
     model = Posts
@@ -15,6 +16,19 @@ class itemlistView(ListView):
     model = Posts
     template_name = 'posts/itemlist.html'
     context_object_name = 'itemlist'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        if query:
+            return Posts.objects.filter(
+                Q(name__icontains=query) |
+                Q(category__icontains=query) |
+                Q(location__icontains=query) |
+                Q(department__name__icontains=query)
+            )
+        else:
+            return Posts.objects.all()
+
 class approvalView(ListView):
     model = Posts
     template_name = 'posts/approval_screen.html'
@@ -26,7 +40,16 @@ class orderhistoryView(ListView):
     context_object_name = 'orderhistory'
 
     def get_queryset(self):
-        return StockHistory.objects.select_related('post').all().order_by('-changed_at')
+        query = self.request.GET.get('q', '')
+        queryset = StockHistory.objects.select_related('post').order_by('-changed_at')
+        
+        if query:
+            queryset = queryset.filter(
+                Q(post__name__icontains=query) |
+                Q(user__username__icontains=query) |
+                Q(department__name__icontains=query)
+            )
+        return queryset
 
 class itemCreateView(CreateView):
     form_class = PostForm

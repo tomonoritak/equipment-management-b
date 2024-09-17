@@ -140,11 +140,45 @@
     .sort-desc::before {
         content: "▼"; /* 下向き矢印 */
     }
+
+    .search-form {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+    
+    .search-form input[type="text"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+        width: 200px;
+    }
+    
+    .search-form button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .search-form button:hover {
+        background-color: #0056b3;
+    }
 </style>
 
 <div class="container">
     <div class="box">
         <h1>発注履歴</h1>
+
+        <form method="GET" action="{% url 'Posts:orderhistory' %}" class="search-form">
+            <input type="text" name="q" placeholder="フリーワード検索" value="{{ request.GET.q }}">
+            <button type="submit">検索</button>
+        </form>
+
         <div class="itemlist">
             <div class="item-time" id="time-header">変更日時<span class="sort-icon"></span></div>
             <div class="item-name" id="name-header">備品名<span class="sort-icon"></span></div>
@@ -178,7 +212,7 @@
                     </div>
                 </li>
             {% empty %}
-                <li>発注履歴はありません。</li>
+                <li>検索結果が見つかりませんでした。</li>
             {% endfor %}
         </ul>
     </div>

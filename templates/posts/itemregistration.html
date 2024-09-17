@@ -180,7 +180,7 @@
         {% else %}
             <div class="form-group">
                 <label for="{{ form.status.id_for_label }}">ステータス:</label>
-                <input type="text" id="{{ form.status.id_for_label }}" name="{{ form.status.html_name }}" value="{{ form.status.value }}" readonly>
+                <input type="text" id="{{ form.status.id_for_label }}" name="{{ form.status.html_name }}" value="承認待ち" readonly>
             </div>
         {% endif %}
 

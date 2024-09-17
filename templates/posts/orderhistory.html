@@ -99,11 +99,15 @@
         flex: 1;
     }
 
-    .item-quantity, .item-price, .item-total {
+    .item-time, .item-total {
+        flex: 0.6;
+    }
+
+    .item-quantity, .item-price {
         flex: 0.5;
     }
 
-    .item-time, .item-department {
+    .item-department {
         flex: 1.5;
     }
 
@@ -136,11 +140,45 @@
     .sort-desc::before {
         content: "▼"; /* 下向き矢印 */
     }
+
+    .search-form {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+    
+    .search-form input[type="text"] {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+        width: 200px;
+    }
+    
+    .search-form button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .search-form button:hover {
+        background-color: #0056b3;
+    }
 </style>
 
 <div class="container">
     <div class="box">
         <h1>発注履歴</h1>
+
+        <form method="GET" action="{% url 'Posts:orderhistory' %}" class="search-form">
+            <input type="text" name="q" placeholder="フリーワード検索" value="{{ request.GET.q }}">
+            <button type="submit">検索</button>
+        </form>
+
         <div class="itemlist">
             <div class="item-time" id="time-header">変更日時<span class="sort-icon"></span></div>
             <div class="item-name" id="name-header">備品名<span class="sort-icon"></span></div>
@@ -155,11 +193,11 @@
             {% for history in orderhistory %}
                 <li>
                     <div class="item_row">
-                        <div class="item-time">{{ history.changed_at|date:"Y/m/d H:i" }}</div>
+                        <div class="item-time">{{ history.changed_at|date:"y/m/d" }}</div>
                         <div class="item-name">
                             <a href="{% url 'Posts:itemdetail' pk=history.post.id %}" title="{{ history.post.name }}">{{ history.post.name }}</a>
                         </div>
-                        <div class="item-price">{{ history.post.price|floatformat:0 }}</div>
+                        <div class="item-price">{{ history.post.price|floatformat:0 }}円</div>
                         <div class="item-quantity">{{ history.stock_quantity }}</div>
                         <div class="item-total"></div> <!-- 合計金額を表示する場所 -->
                         <div class="item-status">
@@ -174,7 +212,7 @@
                     </div>
                 </li>
             {% empty %}
-                <li>発注履歴はありません。</li>
+                <li>検索結果が見つかりませんでした。</li>
             {% endfor %}
         </ul>
     </div>
@@ -236,7 +274,7 @@
                 if (headers[headerId] === activeIndex) {
                     icon.className = `sort-icon ${sortDirection ? 'sort-asc' : 'sort-desc'}`;
                 } else {
-                    icon.className = 'sort-icon';
+                    icon.className = 'sort-icon sort-asc';
                 }
             });
         }

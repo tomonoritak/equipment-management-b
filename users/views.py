@@ -1,19 +1,20 @@
 from django.urls import reverse_lazy, reverse
 from django.views import generic, View
-from .forms import CustomUserCreationForm, UserEditForm, CustomPasswordResetForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
+from django.db.models import Q
+from .forms import CustomUserCreationForm, UserEditForm, CustomPasswordResetForm
 
+# Djangoの標準のユーザーモデルを取得
 User = get_user_model()
 
 class CustomLoginView(LoginView):
@@ -39,15 +40,6 @@ class UserListView(ListView):
     model = User
     template_name = 'users/userlist.html'
     context_object_name = 'users'
-
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
-from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse_lazy
-from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import UpdateView
-from .forms import UserEditForm  # フォームを適宜インポート
 
 class UserEditView(LoginRequiredMixin, UpdateView):
     model = User
@@ -107,7 +99,6 @@ class UserEditView(LoginRequiredMixin, UpdateView):
             return redirect(self.success_url)
         return super().form_valid(form)
 
-
 class CustomPasswordResetView(View):
     template_name = 'users/password_reset.html'
 
@@ -135,7 +126,7 @@ class CustomPasswordResetView(View):
 
             except User.DoesNotExist:
                 form.add_error(None, "ユーザーIDとメールアドレスが一致しません。")
-        
+
         return render(request, self.template_name, {'form': form})
 
 class PasswordResetDoneView(View):
@@ -179,12 +170,39 @@ class PasswordResetConfirmView(View):
             messages.error(request, '無効なリセットリンクです。')
             return redirect('users:password_reset')
 
-
 class PasswordResetCompleteView(View):
     template_name = 'users/password_reset_complete.html'
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
+def user_list(request):
+    # 検索クエリを取得
+    query = request.GET.get('q', '').strip()  # クエリの前後の空白を除去
+    print(f"Search query: {query}")  # デバッグ出力: 検索クエリ
 
+    # 検索結果の初期化
+    users = []
 
+    # 管理者かどうかを確認
+    if request.user.is_superuser:
+        if query:
+            # 管理者の場合、すべてのユーザーから検索
+            users = User.objects.filter(
+                Q(username__icontains=query) |
+                Q(email__icontains=query)
+            )
+        else:
+            users = User.objects.all()
+    else:
+        # 管理者でない場合、自分の情報だけを表示
+        if query:
+            # 自分のユーザー名またはメールアドレスが検索クエリに一致するか確認
+            if query.lower() in request.user.username.lower() or query.lower() in request.user.email.lower():
+                users = [request.user]
+        else:
+            users = [request.user]
+
+    print(f"Filtered users: {users}")  # デバッグ出力: フィルタリング結果
+
+    return render(request, 'users/userlist.html', {'users': users, 'query': query})

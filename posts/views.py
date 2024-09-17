@@ -5,6 +5,7 @@ from .models import Posts, StockHistory ,Department
 from .forms import PostForm, StockQuantityForm ,DepartmentForm
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Q
 
 class IndexView(ListView):
     model = Posts
@@ -15,6 +16,19 @@ class itemlistView(ListView):
     model = Posts
     template_name = 'posts/itemlist.html'
     context_object_name = 'itemlist'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        if query:
+            return Posts.objects.filter(
+                Q(name__icontains=query) |
+                Q(category__icontains=query) |
+                Q(location__icontains=query) |
+                Q(department__name__icontains=query)
+            )
+        else:
+            return Posts.objects.all()
+
 class approvalView(ListView):
     model = Posts
     template_name = 'posts/approval_screen.html'
@@ -26,7 +40,16 @@ class orderhistoryView(ListView):
     context_object_name = 'orderhistory'
 
     def get_queryset(self):
-        return StockHistory.objects.select_related('post').all().order_by('-changed_at')
+        query = self.request.GET.get('q', '')
+        queryset = StockHistory.objects.select_related('post').order_by('-changed_at')
+        
+        if query:
+            queryset = queryset.filter(
+                Q(post__name__icontains=query) |
+                Q(user__username__icontains=query) |
+                Q(department__name__icontains=query)
+            )
+        return queryset
 
 class itemCreateView(CreateView):
     form_class = PostForm
@@ -128,13 +151,21 @@ class DeleteView(DeleteView):
 @user_passes_test(lambda u: u.is_superuser)
 def add_department(request):
     if request.method == 'POST':
-        form = DepartmentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("Posts:department_add")  # 成功後のリダイレクト先
+        if 'delete_id' in request.POST:  # 削除リクエストか確認
+            department_id = request.POST.get('delete_id')
+            department = get_object_or_404(Department, id=department_id)
+            department.is_active = False  # 削除せず非アクティブに設定
+            department.save()
+            return redirect("Posts:department_add")
+        else:  # 新規追加の処理
+            form = DepartmentForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect("Posts:department_add")  # 成功後のリダイレクト先
     else:
         form = DepartmentForm()
-    departments = Department.objects.all().order_by('name')  # 部署を名前順に取得
+
+    departments = Department.objects.filter(is_active=True).order_by('name')  # 非アクティブの部署を除外
 
     context = {
         'form': form,

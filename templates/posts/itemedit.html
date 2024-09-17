@@ -97,9 +97,9 @@
   
     .btn-group {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 15px;
-        align-items: center;
+        justify-content: center;
         margin-top: 30px;
     }
   
@@ -176,21 +176,20 @@
             </div>
         {% endif %}
         
-        <!-- 保存ボタン -->
+        <!-- 保存ボタンと削除ボタンを横並びに配置 -->
         <div class="btn-group">
             <button type="submit" class="btn">保存</button>
         </div>
     </form>
-        {% if user.is_superuser %}
-        <!-- 削除フォームを保存ボタンの下に配置 -->
-        <div class="btn-group">
-            <form action="{% url 'Posts:delete' posts.id %}" method="post" id="delete-form">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除してもよろしいですか？');">削除</button>
-            </form> 
-        </div>
-        {% endif %}
-    
+    {% if user.is_superuser %}
+    <!-- 削除フォームを保存ボタンの下に配置 -->
+    <div class="btn-group">
+        <form action="{% url 'Posts:delete' posts.id %}" method="post" id="delete-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除してもよろしいですか？');">削除</button>
+        </form> 
+    </div>
+    {% endif %}
   </div>
   
   <!-- 画像プレビューのスクリプト -->

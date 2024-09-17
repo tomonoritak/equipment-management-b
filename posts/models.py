@@ -10,6 +10,7 @@ class Department(models.Model):
             'unique': 'この部署名はすでに存在します。別の名前を入力してください。',
         }
     )
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
